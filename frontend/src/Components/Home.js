@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 //MUI
 import { Button, Typography, Grid, AppBar, Toolbar} from '@mui/material';
 import { makeStyles } from '@mui/styles';
@@ -41,6 +41,7 @@ const useStyles = makeStyles({
 
 function Home() {
     const classes = useStyles();
+    const navigate = useNavigate();
     return(
         <>
         <div style={{position:"relative"}}>
@@ -49,7 +50,7 @@ function Home() {
                 <Typography variant="h3" className={classes.homePicText}>
                     WHERE THE ADVENTURE <span style={{color:'#99D7AA', fontSize:'3.8rem'}}>BEGINS</span>
                  </Typography>
-                 <button variant="contained" className={classes.allList}>See all lists</button>
+                 <Button variant="contained" className={classes.allList}>See all plans</Button>
             </div>
         </div>
         </>

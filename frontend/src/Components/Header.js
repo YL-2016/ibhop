@@ -6,6 +6,7 @@ import { makeStyles } from '@mui/styles';
 //Component
 import { borderRadius } from '@mui/system';
 
+
 const useStyles = makeStyles({
     leftNav:{
         marginRight: "auto"
@@ -50,13 +51,13 @@ function Header() {
             <div className={classes.leftNav}>
                 <Button color="inherit" onClick={()=>navigate('/')}>
                     <Typography variant="h4" component="div">
-                        LBHOP
+                        LBTTP
                     </Typography>
                 </Button>
             </div>
             <div className={classes.titleExplain}>
                 <Typography variant="subtitle2" component="div">
-                        Location-Based Hang Out Planner
+                        Location-Based Travelling-Together Planner
                 </Typography>
             </div>
             <div className={classes.rightNav}>
@@ -72,7 +73,7 @@ function Header() {
                 </Button>
                 <Button>
                     <Typography variant="h7" component="div" className={classes.newLocationBtn}>
-                        Add New Location
+                        Add New Place
                     </Typography>
                 </Button>
                 <Button onClick={()=>navigate('/Login')}>
