@@ -2,7 +2,7 @@ from django.contrib.gis.db import models
 from random import choices
 from django.utils import timezone
 from django.contrib.gis.geos import Point
-
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 class place(models.Model):
@@ -17,8 +17,9 @@ class place(models.Model):
         ('Library', 'Library'),
         ('Conservation Park', 'Conservation Park'),
         ('Gallery', 'Gallery'),
+        ('Playground', 'Playground'),
     )
-    p_type = models.CharField(max_length=30, choices=choices_place_type)
+    place_type = models.CharField(max_length=30, choices=choices_place_type)
     choices_parking=(
         ('free', 'free parking'),
         ('hour', )
@@ -35,3 +36,11 @@ class place(models.Model):
     #USE spatial data using longitude and latitude coordinates on the Earth's surface 
     #as defined in the WGS84 standard
     location = models.PointField(blank=True, null=True, srid=4326)
+
+    pic = models.ImageField(blank=True, null=True, upload_to='pic/%Y/%m/%d/')
+    pic1 = models.ImageField(blank=True, null=True, upload_to='pic/%Y/%m/%d/')
+    pic2 = models.ImageField(blank=True, null=True, upload_to='pic/%Y/%m/%d/')
+    pic3 = models.ImageField(blank=True, null=True, upload_to='pic/%Y/%m/%d/')
+    # display place title instead of displaying place object(1)
+    def __str__(self):
+        return self.title

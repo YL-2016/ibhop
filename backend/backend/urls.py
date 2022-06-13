@@ -15,7 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from places.api import views as places_api_views
 
+from django.conf import settings
+from django.conf.urls.static import static
+
+#https://www.django-rest-framework.org/tutorial/3-class-based-views/
+#https://docs.djangoproject.com/en/4.0/howto/static-files/
 urlpatterns = [
     path('admin/', admin.site.urls),
-]
+    path('api/places/', places_api_views.placeList.as_view()),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+

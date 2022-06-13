@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from "react";
+import Axios from "axios";
 //React - Leaflet
 import {MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
 import {Icon} from 'leaflet';
 //MUI
-import { Button, Typography, Grid, AppBar, Toolbar, Card, CardHeader, CardMedia, CardContent} from '@mui/material';
+import { Button, Typography, Grid, AppBar, Toolbar, Card, CardHeader, CardMedia, CardContent, CircularProgress} from '@mui/material';
 import { makeStyles } from '@mui/styles';
 //Map Marker Icons
 import ArtMuseumIconPng from  '../Assets/icons/art-museum-2.png';
@@ -38,6 +39,12 @@ const useStyles = makeStyles({
 })
 
 function PlaceList() {
+  
+  //
+  //fetch('http://localhost:8000/api/places/').then(response=> response.json()).then(data=>console.log(data))
+
+
+
   const classes = useStyles();
   const ArtMuseumIcon = new Icon({
     iconUrl: ArtMuseumIconPng,
@@ -65,24 +72,68 @@ function PlaceList() {
     setLongtitude();
   }
 
+  const [allPlaces, setAllPlaces] = useState([]);
+  const [dataLoading, setDataLoading] = useState(true)
+
+  useEffect(()=>{
+    //https://axios-http.com/docs/intro
+    //put response(promise) to asynchronize function to get data
+    const source = Axios.CancelToken.source();
+    async function getAllPlaces(){
+      try{
+        const response = await Axios.get('http://localhost:8000/api/places/', 
+        { cancelToken: source.token });
+        //console.log(response.data);
+        setAllPlaces(response.data);
+        setDataLoading(false)
+      }catch(error){
+        console.log(error.response)
+      }
+    }
+    getAllPlaces();
+    return()=>{
+      source.cancel();
+    }
+  },[]);
+
+  if (dataLoading === false){
+    console.log(allPlaces[0]);
+  }
+  
+  if (dataLoading === true){
+    return (
+			<Grid
+				container
+				justifyContent="center"
+				alignItems="center"
+				style={{ height: "100vh" }}>
+				<CircularProgress />
+			</Grid>
+		);
+  }
   return (
     <Grid container>
       <Grid item xs={8} style={{marginTop:"10px"}}>
         <AppBar position='sticky'>
           <div style={{height:"100vh"}}>
             <MapContainer center={[43.6532, -79.3832]} zoom={10} scrollWheelZoom={true}>
-              <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"/>
-                            
-              {places.map((place)=>{
+              <TileLayer
+								attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+								url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+							/>
+  
+              {allPlaces.map((place)=>{
                 function iconDisplay(){
-                  if (place.type === 'Library'){
+                  if (place.place_type === 'Library'){
                     return LibraryIcon;
                   }
-                  else if (place.type === 'Gallery'){
+                  else if (place.place_type === 'Gallery'){
                     return ArtMuseumIcon;
                   }
-                  else if (place.type === 'Conservation Park'){
+                  else if (place.place_type === 'FestivalIcon'){
+                    return LibraryIcon;
+                  }
+                  else if (place.place_type === 'Conservation Park'){
                     return ConservationParkIcon;
                   }
                 }
@@ -92,8 +143,7 @@ function PlaceList() {
                     icon={iconDisplay()}
                     position={[
                       place.location.coordinates[0],
-                      place.location.coordinates[1],
-                    ]}>
+                      place.location.coordinates[1]]}>
                     <Popup>
                       <Typography variant='h5'>{place.title}</Typography>
                       <img src={place.pic} 
@@ -116,7 +166,7 @@ function PlaceList() {
         </AppBar>
       </Grid>
       <Grid item xs={4}>
-        {places.map((place)=>{
+        {allPlaces.map((place)=>{
           return (
             <Card key={place.id} className={classes.placeCardStyle}>
               <CardHeader
