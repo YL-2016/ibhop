@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext} from 'react';
+import Axios from "axios";
 import {Link, useNavigate} from "react-router-dom";
 //MUI
-import { Button, Typography, Grid, AppBar, Toolbar} from '@mui/material';
+import { Button, Typography, Grid, AppBar, Toolbar, Menu, MenuItem} from '@mui/material';
 import { makeStyles } from '@mui/styles';
 //Component
 import { borderRadius } from '@mui/system';
-
+//contexts
+import StateContext from '../Contexts/StateContext';
+import DispatchContext from '../Contexts/DispatchContext';
 
 const useStyles = makeStyles({
     leftNav:{
@@ -33,18 +36,67 @@ const useStyles = makeStyles({
     loginBtn:{
         backgroundColor:'#E9B7C6',
         color: 'white',
-        width: '5rem',
+        width: '11rem',
         fontSize: '1.1rem',
         marginLeft: '1rem',
         "&:hover":{
             backgroundColor: '#139879'
         },
     },
+
+    userPageBtn:{
+		color: "black",
+		//backgroundColor: '#71AFED',
+		width: "8rem",
+		fontWeight:'1.1rem',
+		borderRadius: "10px",
+		marginBottom: "0.25rem",
+    },
+
+    logoutBtn:{
+		color: "black",
+		//backgroundColor: '#71AFED',
+		width: "8rem",
+		fontWeight: '1.1rem',
+		borderRadius: "10px",
+    }
 })
 
 function Header() {
   const classes = useStyles();
   const navigate = useNavigate();
+  const globalState = useContext(StateContext);
+  const globalDispatch = useContext(DispatchContext);
+
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+      setAnchorEl(null);
+  };
+
+  async function handleLogOut() {
+    setAnchorEl(null);
+    const confirmLogout = window.confirm("Logging out?");
+    if (confirmLogout) {
+        try {
+            const response = await Axios.post(
+                "http://localhost:8000/api-auth/token/logout/",
+                globalState.userToken,
+                { headers: { Authorization: "Token ".concat(globalState.userToken) } }
+            );
+
+            globalDispatch({ type: "logout" });
+            navigate('/')
+        } catch (error) {
+            console.log(error.response)
+        }
+    }
+}
+
   return (
     <AppBar position="static" style={{backgroundColor:'#71AFED'}}>
         <Toolbar>
@@ -71,16 +123,37 @@ function Header() {
                         Buddies
                     </Typography>
                 </Button>
-                <Button>
-                    <Typography variant="h7" component="div" className={classes.newLocationBtn}>
+                <Button className={classes.newLocationBtn}>
                         Add New Place
-                    </Typography>
                 </Button>
-                <Button onClick={()=>navigate('/Login')}>
-                    <Typography variant="h7" component="div" className={classes.loginBtn}>
-                        Login
-                    </Typography>
-                </Button>
+                {globalState.userIsLogin ? (
+						<Button className={classes.loginBtn}
+                        onClick={handleClick}
+                        >
+                            {globalState.userUserName}
+						</Button>
+					) : (
+						<Button
+							className={classes.loginBtn}
+							onClick={() => navigate("/login")}
+						>
+							Login
+						</Button>
+				)}
+                <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                    }}
+                    
+                >
+                    <MenuItem className={classes.userPageBtn} onClick={handleClose}>My Place List</MenuItem>
+                    <MenuItem className={classes.logoutBtn} onClick={handleLogOut}>Logout</MenuItem>
+                </Menu>
+                
             </div>
         </Toolbar>
         </AppBar> 

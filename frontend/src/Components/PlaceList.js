@@ -130,8 +130,8 @@ function PlaceList() {
                   else if (place.place_type === 'Gallery'){
                     return ArtMuseumIcon;
                   }
-                  else if (place.place_type === 'FestivalIcon'){
-                    return LibraryIcon;
+                  else if (place.place_type === 'Playground'){
+                    return FestivalIcon;
                   }
                   else if (place.place_type === 'Conservation Park'){
                     return ConservationParkIcon;
@@ -142,8 +142,8 @@ function PlaceList() {
                     key={place.id}
                     icon={iconDisplay()}
                     position={[
-                      place.location.coordinates[0],
-                      place.location.coordinates[1]]}>
+                      place.latitude,
+                      place.longtitude]}>
                     <Popup>
                       <Typography variant='h5'>{place.title}</Typography>
                       <img src={place.pic} 
