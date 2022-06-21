@@ -12,6 +12,7 @@ import Placelist from './Components/PlaceList';
 import Header from './Components/Header';
 import Buddy from './Components/Buddy';
 import UserRegister from './Components/UserRegister';
+import AddPlace from './Components/AddPlace';
 
 //contexts
 import DispatchContext from './Contexts/DispatchContext';
@@ -52,6 +53,7 @@ function App() {
       localStorage.setItem('theUserId', state.userId)
       localStorage.setItem('theUserToken', state.userToken)
     }
+    //for log out
     else{
       localStorage.removeItem('theUserUsername')
       localStorage.removeItem('theUserEmail')
@@ -73,6 +75,7 @@ function App() {
             <Route path='/Placelist' element={<Placelist />} />
             <Route path='/UserRegister' element={<UserRegister />} />
             <Route path='/Buddy' element={<Buddy />} />
+            <Route path='/AddPlace' element={<AddPlace />} />
           </Routes>
           </BrowserRouter>
         </StyledEngineProvider>

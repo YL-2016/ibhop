@@ -82,7 +82,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -156,5 +155,4 @@ REST_FRAMEWORK = {
 DJOSER = {
     'SET_USERNAME_RETYPE' : True,
     'SEND_ACTIVATION_EMAIL' : False,
-
 }

@@ -123,7 +123,7 @@ function Header() {
                         Buddies
                     </Typography>
                 </Button>
-                <Button className={classes.newLocationBtn}>
+                <Button className={classes.newLocationBtn} onClick={()=>navigate('/AddPlace')}>
                         Add New Place
                 </Button>
                 {globalState.userIsLogin ? (

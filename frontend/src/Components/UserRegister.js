@@ -7,8 +7,10 @@ import { useImmerReducer } from "use-immer";
 // MUI
 import {
 	Grid,AppBar,Typography,Button,Card,CardHeader,CardMedia,CardContent,CircularProgress,
-    TextField,Snackbar,Alert,
+    TextField,Snackbar,Alert,FormControl,InputLabel,OutlinedInput,InputAdornment,IconButton
 } from "@mui/material";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles({
@@ -44,6 +46,7 @@ function UserRegister() {
 		passwordValue: "",
 		password2Value: "",
 		sendRequest: 0,
+		showPassword:false,
 	};
 
 	function Reducer(draft, action) {
@@ -118,27 +121,33 @@ function UserRegister() {
                 <Grid item container style={{ marginTop: "0.5rem" }}>
                     <TextField 	
 					id="email" 
-					label="email" 
+					label="Email" 
 					variant="outlined" 
 					fullWidth
 					value={state.emailValue}
 					onChange={(e) =>dispatch({type: "catchEmailChange", emailChosen: e.target.value})}
 					/>
                 </Grid>
+
                 <Grid item container style={{ marginTop: "0.5rem" }}>
                     <TextField 	
 					id="password" 
-					label="password" 
+					label="Password" 
+					obscureText="true"
 					variant="outlined" 
 					fullWidth
+					type={state.showPassword ? "text" : "password"}
 					value={state.passwordValue}
 					onChange={(e) =>dispatch({type: "catchPasswordChange", passwordChosen: e.target.value})}
 					/>
                 </Grid>
+
                 <Grid item container style={{ marginTop: "0.5rem" }}>
                     <TextField 	
 					id="confirmPassword" 
 					label="Confirm Password" 
+					obscureText="true"
+					type={state.showPassword ? "text" : "password"}
 					variant="outlined" 
 					fullWidth
 					value={state.password2Value}
@@ -152,7 +161,6 @@ function UserRegister() {
 					fullWidth 
 					type="submit" 
 					className={classes.registerBtn}
-					onClick={() => navigate("/login")}
 					>
 						SIGN UP
 					</Button>

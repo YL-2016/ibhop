@@ -51,6 +51,7 @@ function Login() {
 		emailValue: "",
 		sendRequest: 0,
     token:'',
+    showPassword:false,
 	};
 
 	function Reducer(draft, action) {
@@ -165,6 +166,8 @@ function Login() {
               <Grid item container style={{ marginTop: "0.5rem" }}>
                   <TextField 	
                   id="password" 
+                  obscureText="true"
+                  type={state.showPassword ? "text" : "password"}
                   label="password" 
                   variant="outlined" 
                   fullWidth
