@@ -25,6 +25,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/places/', places_api_views.placeList.as_view()),
+    path('api/places/create/', places_api_views.placeCreation.as_view()),
 
     path('api-auth/', include('djoser.urls')),
     path('api-auth/', include('djoser.urls.authtoken')),

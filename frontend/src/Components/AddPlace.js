@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useMemo } from "react";
+import React, { useEffect, useState, useRef, useMemo, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 //https://www.npmjs.com/package/use-immer
@@ -19,6 +19,8 @@ import {
 	useMap,
 	Polygon,
 } from "react-leaflet";
+// Contexts
+import StateContext from "../Contexts/StateContext";
 
 const useStyles = makeStyles({
     formContainer: {
@@ -40,6 +42,16 @@ const useStyles = makeStyles({
 			backgroundColor: "#139879",
 		},
 	},
+    addPicBtn:{
+        backgroundColor: "#E9B7C6",
+		color: "white",
+		fontSize: "0.8rem",
+		marginLeft: "1rem",
+        border: "1px solid white",
+		"&:hover": {
+			backgroundColor: "#139879",
+		},
+    }
 
 });
 
@@ -49,12 +61,12 @@ const areaOptions = [
 		label: "",
 	},
     {
-        value: 'Within the Canada',
-        label: 'Within the Canada',
+        value: "Within the Canada",
+        label: "Within the Canada",
     },
     {
-        value: 'Outside the Canada',
-        label: 'Outside the Canada',
+        value: "Outside the Canada",
+        label: "Outside the Canada",
     },
 ]
 
@@ -64,20 +76,20 @@ const placeTypeOptions = [
 		label: "",
 	},
     {
-        value: 'Library',
-        label: 'Library',
+        value: "Library",
+        label: "Library",
     },
     {
-        value: 'Conservation Park',
-        label: 'Conservation Park',
+        value: "Conservation Park",
+        label: "Conservation Park",
     },
     {
-        value: 'Gallery',
-        label: 'Gallery',
+        value: "Gallery",
+        label: "Gallery",
     },
     {
-        value: 'Playground',
-        label: 'Playground',
+        value: "Playground",
+        label: "Playground",
     },
 ]
 
@@ -103,6 +115,7 @@ const parkingFeeTypeOptions = [
 function AddPlace() {
     const classes = useStyles();
     const navigate = useNavigate();  
+    const GlobalState = useContext(StateContext);
 
     const initialState = {
 		titleValue: '',
@@ -123,6 +136,8 @@ function AddPlace() {
 			lat: "62.69369531078332",
 			lng: "-103.82354234842099",
 		},
+        uploadedPictures: [],
+        sendRequest: 0,
 
 
 
@@ -179,6 +194,13 @@ function AddPlace() {
                 draft.latitudeValue = "";
                 draft.longitudeValue = "";
                 break;
+            case "catchUploadedPictures":
+                draft.uploadedPictures = action.picturesChosen;
+                break
+			case "changeSendRequest":
+				draft.sendRequest = draft.sendRequest + 1;
+				break;
+
             
 		}
 	}
@@ -213,10 +235,6 @@ function AddPlace() {
 		[]
 	);
 
-    useEffect(()=>{
-        console.log(state.latitudeValue, state.longitudeValue);
-    },[state.latitudeValue, state.longitudeValue])
-
     //use effect to change the map view depending on the chosen area
     useEffect(()=>{
         if(state.areaValue === 'Within the Canada'){
@@ -237,11 +255,69 @@ function AddPlace() {
         }
     }, [state.areaValue]);
 
+    //Catching picture file
+    useEffect(()=>{
+        if(state.uploadedPictures[0]){
+            dispatch({type:"catchPicChange", picChosen:state.uploadedPictures[0]})
+        }
+    },[state.uploadedPictures[0]])
+
+    useEffect(()=>{
+        if(state.uploadedPictures[1]){
+            dispatch({type:"catchPic1Change", pic1Chosen:state.uploadedPictures[1]})
+        }
+    },[state.uploadedPictures[1]])
+
+    useEffect(()=>{
+        if(state.uploadedPictures[2]){
+            dispatch({type:"catchPic2Change", pic2Chosen:state.uploadedPictures[2]})
+        }
+    },[state.uploadedPictures[2]])
+
+    // useEffect(()=>{
+    //     if(state.uploadedPictures[3]){
+    //         dispatch({type:"catchPic3Change", pic3Chosen:state.uploadedPictures[3]})
+    //     }
+    // },[state.uploadedPictures[3]])
+
+
+
     function FormSubmit(e) {
         e.preventDefault();
-        //dispatch({ type: "changeSendRequest" });
+        dispatch({ type: "changeSendRequest" });
     }
-
+    useEffect(() => {
+		if (state.sendRequest) {
+			async function AddPlace() {
+				const formData = new FormData();
+				formData.append("title", state.titleValue);
+                formData.append("place_type", state.placeTypeValue);
+                formData.append("description", state.descriptionValue);
+                formData.append("area", state.areaValue);
+                formData.append("entry_fee", state.entryFeeValue);
+                formData.append("parking", state.parkingValue);
+                formData.append("buddy_num", state.buddyNumValue);
+                formData.append("latitude", state.latitudeValue);
+                formData.append("longtitude", state.longitudeValue);
+                formData.append("pic", state.picValue);
+                formData.append("pic1", state.pic2Value);
+                formData.append("pic2", state.pic3Value);
+                //formData.append("pic3", state.pic4Value);
+                //take from the current of login user
+                //child component of APP conponent
+                formData.append("Author", GlobalState.userId);
+				try {
+					const response = await Axios.post(
+						"http://localhost:8000/api/places/create/",
+						formData
+					);
+				} catch (e) {
+					console.log(e.response)
+				}
+			}
+			AddPlace();
+		}
+	}, [state.sendRequest]);
 
     return (
         <div className={classes.formContainer}>
@@ -335,7 +411,17 @@ function AddPlace() {
                         />
                     </Grid>
                 </Grid>
-                
+                <Grid item container xs={5} style={{ marginTop: "0.5rem" }}>
+                    <TextField 	
+                    id="buddyNum" 
+                    label="Buddy Number" 
+                    type="number"
+                    variant="standard" 
+                    fullWidth
+                    value={state.buddyNumValue}
+                    onChange={(e) =>dispatch({type: "catchBuddyNumChange", buddyNumChosen: e.target.value})}
+                    />
+                </Grid>
                 {/* MAP -- for map to show we need to add a style*/}
                 <Grid item container style={{height:"60vh",  marginTop: "1rem" }}>
                     <MapContainer center={[45.889076327889704, 166.8795827641737]} zoom={2} scrollWheelZoom={true}>
@@ -353,11 +439,11 @@ function AddPlace() {
                     </MapContainer>
                 </Grid>
                 <Grid item container>
-                    <Typography style={{ fontSize: "0.9rem", color:"black", fontStyle:"italic"}}> 
-                    Note: You can drag the marker to attain the precise latitude & longtitude, and the values will reset to null if you update the area value.
+                    <Typography style={{ fontSize: "1rem", color:"black", fontStyle:"italic"}}> 
+                    Note: Please choose the area first and then drag the marker to mark the precise location.
                     </Typography>
                 </Grid>
-                <Grid item container justifyContent="space-between">
+                {/* <Grid item container justifyContent="space-between">
                     <Grid item container xs={5} style={{ marginTop: "0.5rem" }}>
                         <TextField 	
                         id="latitude" 
@@ -378,72 +464,46 @@ function AddPlace() {
                         onChange={(e) =>dispatch({type: "catchLongitudeChange", longitudeChosen: e.target.value})}
                         />
                     </Grid>
-                </Grid>
+                </Grid> */}
                 <Grid item container style={{ marginTop: "1rem" }}>
                     <TextField 	
                     id="description" 
                     label="Description" 
-                    variant="standard" 
+                    variant="outlined"
+                    multiline
+                    rows={6}
                     fullWidth
                     value={state.descriptionValue}
                     onChange={(e) =>dispatch({type: "catchDescriptionChange", descriptionChosen: e.target.value})}
                     />
                 </Grid>
-                <Grid item container xs={5} style={{ marginTop: "0.5rem" }}>
-                    <TextField 	
-                    id="buddyNum" 
-                    label="Buddy Number" 
-                    type="number"
-                    variant="standard" 
-                    fullWidth
-                    value={state.buddyNumValue}
-                    onChange={(e) =>dispatch({type: "catchBuddyNumChange", buddyNumChosen: e.target.value})}
-                    />
-                </Grid>
-                <Grid item container style={{ marginTop: "0.5rem" }}>
-                    <TextField 	
-                    id="pic" 
-                    label="Main Picture" 
-                    variant="standard" 
-                    fullWidth
-                    value={state.picValue}
-                    onChange={(e) =>dispatch({type: "catchPicChange", picChosen: e.target.value})}
-                    />
-                </Grid>
-                <Grid item container style={{ marginTop: "0.5rem" }}>
-                    <TextField 	
-                    id="pic1" 
-                    label="Option Picture 1" 
-                    variant="standard" 
-                    fullWidth
-                    value={state.pic1Value}
-                    onChange={(e) =>dispatch({type: "catchPic1Change", pic1Chosen: e.target.value})}
-                    />
-                </Grid>
-                <Grid item container style={{ marginTop: "0.5rem" }}>
-                    <TextField 	
-                    id="pic2" 
-                    label="Option Picture 2" 
-                    variant="standard" 
-                    fullWidth
-                    value={state.pic2Value}
-                    onChange={(e) =>dispatch({type: "catchPic2Change", pic2Chosen: e.target.value})}
-                    />
-                </Grid>
-                <Grid item container style={{ marginTop: "0.5rem" }}>
-                    <TextField 	
-                    id="pic3" 
-                    label="Option Picture 3" 
-                    variant="standard" 
-                    fullWidth
-                    value={state.pic3Value}
-                    onChange={(e) =>dispatch({type: "catchPic3Change", pic3Chosen: e.target.value})}
-                    />
-                </Grid>
-
-
-                <Grid item container xs={8}
+                <Grid item container xs={5}
                     style={{ marginTop: "1rem", marginLeft: "auto", marginRight: "auto" }}>
+                    <Button 
+                    variant="contained" 
+                    conponent="label"
+                    fullWidth 
+                    className={classes.addPicBtn}
+                    >
+                        Upload Pictures (Up to 3)
+                        <input
+                            type="file"
+                            multiple
+                            accept="image/png, image/gif, image/jpeg"
+                            onChange={(e)=>dispatch({type: "catchUploadedPictures", picturesChosen: e.target.files})}
+                        />
+                    </Button>
+                </Grid>
+                <Grid item container>
+                    <ul>
+                        {state.picValue ? <li>{state.picValue.name}</li> : ""}
+                        {state.pic1Value ? <li>{state.pic1Value.name}</li> : ""}
+                        {state.pic2Value ? <li>{state.pic2Value.name}</li> : ""}
+                        {/* {state.pic3Value ? <li>{state.pic3Value.name}</li> : ""} */}
+                    </ul>
+                </Grid>
+                <Grid item container xs={6}
+                    style={{ marginTop: "2rem", marginLeft: "auto", marginRight: "auto" }}>
                     <Button 
                     variant="contained" 
                     fullWidth 

@@ -16,5 +16,9 @@ from rest_framework import generics
 
 
 class placeList(generics.ListAPIView):
+    queryset = place.objects.all().order_by('-date_posted')
+    serializer_class = placeSerializer
+
+class placeCreation(generics.CreateAPIView):
     queryset = place.objects.all()
     serializer_class = placeSerializer

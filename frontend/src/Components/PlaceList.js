@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
+import { useImmerReducer } from "use-immer";
+import { useNavigate } from "react-router-dom";
 //React - Leaflet
-import {MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
+import {MapContainer, TileLayer, Marker, Popup, useMap} from 'react-leaflet';
 import {Icon} from 'leaflet';
 //MUI
-import { Button, Typography, Grid, AppBar, Toolbar, Card, CardHeader, CardMedia, CardContent, CircularProgress} from '@mui/material';
+import { Button, Typography, Grid, AppBar, Toolbar, Card, CardHeader, CardMedia, 
+  CardContent, CircularProgress, IconButton, CardActions,} from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import RoomIcon from "@mui/icons-material/Room";
+
 //Map Marker Icons
 import ArtMuseumIconPng from  '../Assets/icons/art-museum-2.png';
 import LibraryIconPng from  '../Assets/icons/library.png';
@@ -43,8 +48,6 @@ function PlaceList() {
   //
   //fetch('http://localhost:8000/api/places/').then(response=> response.json()).then(data=>console.log(data))
 
-
-
   const classes = useStyles();
   const ArtMuseumIcon = new Icon({
     iconUrl: ArtMuseumIconPng,
@@ -66,6 +69,26 @@ function PlaceList() {
 
   const [latitude, setLatitude] = useState(43.6532);
   const [longtitude, setLongtitude] = useState(-79.3832)
+
+  const initialState = {
+		mapInstance: null,
+	};
+
+	function ReducerFuction(draft, action) {
+		switch (action.type) {
+			case "getMap":
+				draft.mapInstance = action.mapData;
+				break;
+		}
+	}
+
+	const [state, dispatch] = useImmerReducer(ReducerFuction, initialState);
+
+	function TheMapComponent() {
+		const map = useMap();
+		dispatch({ type: "getMap", mapData: map });
+		return null;
+	}
 
   function GoCenter(){
     setLatitude();
@@ -121,6 +144,7 @@ function PlaceList() {
 								attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 								url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 							/>
+              <TheMapComponent/>
   
               {allPlaces.map((place)=>{
                 function iconDisplay(){
@@ -170,11 +194,12 @@ function PlaceList() {
           return (
             <Card key={place.id} className={classes.placeCardStyle}>
               <CardHeader
-                //action={
-                //  <IconButton aria-label="settings">
-                //    <MoreVertIcon />
-                //  </IconButton>
-                //}
+                action={
+                 <IconButton aria-label="settings"
+                 onClick={() =>state.mapInstance.flyTo([place.latitude, place.longtitude],16)}>
+                   <RoomIcon/>
+                 </IconButton>
+                }
                 title={place.title}
                 //subheader="September 14, 2016"
               />
@@ -188,14 +213,11 @@ function PlaceList() {
                   {place.description.toString(0,50)}
                 </Typography>
               </CardContent>
-              {/*<CardActions disableSpacing>
+              <CardActions disableSpacing>
                 <IconButton aria-label="add to favorites">
-                  <FavoriteIcon />
+                  {place.creator_username}
                 </IconButton>
-                <IconButton aria-label="share">
-                  <ShareIcon />
-                </IconButton>
-              </CardActions>*/}
+              </CardActions>
             </Card>
           )
         })}
