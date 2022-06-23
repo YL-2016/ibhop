@@ -77,7 +77,10 @@ function Header() {
   const handleClose = () => {
       setAnchorEl(null);
   };
-
+  function handleProfile(){
+      setAnchorEl(null);
+      navigate('/Profile')
+  }
   async function handleLogOut() {
     setAnchorEl(null);
     const confirmLogout = window.confirm("Logging out?");
@@ -150,7 +153,7 @@ function Header() {
                     }}
                     
                 >
-                    <MenuItem className={classes.userPageBtn} onClick={handleClose}>My Place List</MenuItem>
+                    <MenuItem className={classes.userPageBtn} onClick={handleProfile}>Profile</MenuItem>
                     <MenuItem className={classes.logoutBtn} onClick={handleLogOut}>Logout</MenuItem>
                 </Menu>
                 

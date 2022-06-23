@@ -138,6 +138,10 @@ function AddPlace() {
 		},
         uploadedPictures: [],
         sendRequest: 0,
+        userProfile: {
+			creatorName: "",
+			emailAddress: "",
+		},
 
 
 
@@ -200,7 +204,10 @@ function AddPlace() {
 			case "changeSendRequest":
 				draft.sendRequest = draft.sendRequest + 1;
 				break;
-
+            case "catchUserProfileInfo":
+				draft.userProfile.creatorName = action.profileObject.creator_name;
+				draft.userProfile.emailAddress = action.profileObject.email_address;
+				break;
             
 		}
 	}
@@ -280,15 +287,81 @@ function AddPlace() {
     //     }
     // },[state.uploadedPictures[3]])
 
-
+    //request to get profile info
+    useEffect(() => {
+		async function GetProfileInfo() {
+			try {
+				const response = await Axios.get(
+					`http://localhost:8000/api/profiles/${GlobalState.userId}/`
+				);
+                //console.log(response.data)
+				dispatch({
+					type: "catchUserProfileInfo",
+					profileObject: response.data,
+				});
+			} catch (e) {}
+		}
+		GetProfileInfo();
+	}, []);
 
     function FormSubmit(e) {
         e.preventDefault();
         dispatch({ type: "changeSendRequest" });
     }
+
+    //only users with completed profile ablt to submit new place
+    function ConditionalSubmitButton(){
+        if(
+            GlobalState.userIsLogin &&
+            state.userProfile.creatorName !== null &&
+            state.userProfile.creatorName !== "" &&
+            state.userProfile.emailAddress !== "" &&
+            state.userProfile.emailAddress !== null
+        ){
+            return(
+                <Button 
+                variant="contained" 
+                fullWidth 
+                type="submit" 
+                className={classes.registerBtn}
+                >
+                    SUBMIT
+                </Button>
+            );
+        }else if(
+            GlobalState.userIsLogin &&
+            (state.userProfile.creatorName === null ||
+            state.userProfile.creatorName === "" ||
+            state.userProfile.emailAddress === "" ||
+            state.userProfile.emailAddress === null)
+        ){
+            return(
+                <Button
+                    variant="outlined"
+                    fullWidth
+                    className={classes.registerBtn}
+                    onClick={() => navigate("/profile")}
+                >
+                    PLEASE COMPLETE YOUR PROFILE BEFORE ADD A NEW PLACE
+                </Button>
+            );
+        }else if (!GlobalState.userIsLogin){
+            return (
+				<Button
+					variant="outlined"
+					fullWidth
+                    className={classes.registerBtn}
+					onClick={() => navigate("/login")}
+				>
+					PLEASE SIGN IN TO BEFORE ADD A NEW PLACE
+				</Button>
+			);
+        }
+    }
+
     useEffect(() => {
 		if (state.sendRequest) {
-			async function AddPlace() {
+			async function UpdateProfile() {
 				const formData = new FormData();
 				formData.append("title", state.titleValue);
                 formData.append("place_type", state.placeTypeValue);
@@ -305,7 +378,7 @@ function AddPlace() {
                 //formData.append("pic3", state.pic4Value);
                 //take from the current of login user
                 //child component of APP conponent
-                formData.append("Author", GlobalState.userId);
+                formData.append("creator", GlobalState.userId);
 				try {
 					const response = await Axios.post(
 						"http://localhost:8000/api/places/create/",
@@ -315,7 +388,7 @@ function AddPlace() {
 					console.log(e.response)
 				}
 			}
-			AddPlace();
+			UpdateProfile();
 		}
 	}, [state.sendRequest]);
 
@@ -504,14 +577,9 @@ function AddPlace() {
                 </Grid>
                 <Grid item container xs={6}
                     style={{ marginTop: "2rem", marginLeft: "auto", marginRight: "auto" }}>
-                    <Button 
-                    variant="contained" 
-                    fullWidth 
-                    type="submit" 
-                    className={classes.registerBtn}
-                    >
-                        SUBMIT
-                    </Button>
+                    
+                    {ConditionalSubmitButton()}
+
                 </Grid>
             </form>
             {/* <Button onClick={()=>state.mapInstance.flyTo([43,-79], 15)}>TestButton</Button> */}

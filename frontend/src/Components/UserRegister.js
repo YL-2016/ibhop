@@ -91,7 +91,7 @@ function UserRegister() {
 							cancelToken: source.token,
 						}
 					);
-					//navigate('/')
+					navigate('/')
 				} catch (error) {
 				}
 			}

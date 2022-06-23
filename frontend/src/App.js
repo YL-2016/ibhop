@@ -13,6 +13,7 @@ import Header from './Components/Header';
 import Buddy from './Components/Buddy';
 import UserRegister from './Components/UserRegister';
 import AddPlace from './Components/AddPlace';
+import Profile from './Components/Profile';
 
 //contexts
 import DispatchContext from './Contexts/DispatchContext';
@@ -76,6 +77,7 @@ function App() {
             <Route path='/UserRegister' element={<UserRegister />} />
             <Route path='/Buddy' element={<Buddy />} />
             <Route path='/AddPlace' element={<AddPlace />} />
+            <Route path='/Profile' element={<Profile />}/>
           </Routes>
           </BrowserRouter>
         </StyledEngineProvider>

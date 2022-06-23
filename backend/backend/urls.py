@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from places.api import views as places_api_views
+from users.api import views as users_api_views
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -26,6 +27,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/places/', places_api_views.placeList.as_view()),
     path('api/places/create/', places_api_views.placeCreation.as_view()),
+    path('api/profiles/', users_api_views.ProfileList.as_view()),
+    path('api/profiles/<int:creator>/', users_api_views.ProfileDetail.as_view()),
+    path('api/profiles/<int:creator>/update/', users_api_views.ProfileUpdate.as_view()),
 
     path('api-auth/', include('djoser.urls')),
     path('api-auth/', include('djoser.urls.authtoken')),
