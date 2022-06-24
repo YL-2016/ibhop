@@ -215,7 +215,7 @@ function PlaceList() {
               </CardContent>
               <CardActions disableSpacing>
                 <IconButton aria-label="add to favorites">
-                  {place.creator_username}
+                  {place.creator_lname_username}
                 </IconButton>
               </CardActions>
             </Card>

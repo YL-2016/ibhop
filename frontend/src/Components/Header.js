@@ -153,7 +153,7 @@ function Header() {
                     }}
                     
                 >
-                    <MenuItem className={classes.userPageBtn} onClick={handleProfile}>Profile</MenuItem>
+                    <MenuItem className={classes.userPageBtn} onClick={handleProfile}>Update Profile</MenuItem>
                     <MenuItem className={classes.logoutBtn} onClick={handleLogOut}>Logout</MenuItem>
                 </Menu>
                 

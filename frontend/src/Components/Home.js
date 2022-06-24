@@ -50,7 +50,7 @@ function Home() {
                 <Typography variant="h3" className={classes.homePicText}>
                     WHERE THE ADVENTURE <span style={{color:'#99D7AA', fontSize:'3.8rem'}}>BEGINS</span>
                  </Typography>
-                 <Button variant="contained" className={classes.allList}>See all plans</Button>
+                 <Button variant="contained" className={classes.allList}>See all places</Button>
             </div>
         </div>
         </>

@@ -65,7 +65,7 @@ function ProfileUpdate(props) {
         emailAddress: props.userProfile.emailAddress,
         bio:props.userProfile.bio,
         profilePic:[],
-        curPicture:props.userProfile.curPicture,
+        curPicture:props.userProfile.profilePic,
         placeList: [],
         sendRequest:0
         
@@ -107,16 +107,23 @@ function ProfileUpdate(props) {
 		}
 	}, [state.profilePic[0]]);
 
-    //use request to 
+    //use request to send request
     useEffect(() => {
 		if (state.sendRequest) {
 			async function UpdateProfile() {
 				const formData = new FormData();
-				formData.append("creator_name", state.creatorName);
-                formData.append("email_address", state.emailAddress);
-                formData.append("bio", state.bio);
-                formData.append("profile_picture", state.curPicture);
-                formData.append("creator", GlobalState.userId);
+                if(typeof state.curPicture === "string" || state.curPicture === null){
+                    formData.append("creator_name", state.creatorName);
+                    formData.append("email_address", state.emailAddress);
+                    formData.append("bio", state.bio);
+                    formData.append("creator", GlobalState.userId);
+                }else{
+                    formData.append("creator_name", state.creatorName);
+                    formData.append("email_address", state.emailAddress);
+                    formData.append("bio", state.bio);
+                    formData.append("profile_picture", state.curPicture);
+                    formData.append("creator", GlobalState.userId);
+                }
                 //take from the current of login user
                 //child component of APP conponent
 				try {
@@ -124,6 +131,8 @@ function ProfileUpdate(props) {
 						`http://localhost:8000/api/profiles/${GlobalState.userId}/update/`,
 						formData
 					);
+                    //REFRESH AFTER SUCCESSFUL
+                    navigate(0);
 				} catch (e) {
 					console.log(e.response)
 				}
@@ -136,13 +145,45 @@ function ProfileUpdate(props) {
 		e.preventDefault();
 		dispatch({ type: "changeSendRequest" });
 	}
-    
+    function ProfilePicDisplay() {
+		if (typeof state.curPicture !== "string") {
+			return (
+				<ul>
+					{state.curPicture ? (
+						<li>{state.curPicture.name}</li>
+					) : (
+						""
+					)}
+				</ul>
+			);
+		} else if (typeof state.curPicture === "string") {
+			return (
+				<Grid
+					item
+					style={{
+						marginTop: "0.5rem",
+						marginRight: "auto",
+						marginLeft: "auto",
+					}}
+				>
+                    <Typography style={{textAlign:'center', marginTop:'1.1rem'}}>
+                        Current Profile Picture: 
+                    </Typography>
+					<img
+						src={props.userProfile.profilePic}
+						style={{ height: "4rem", width: "4rem"}}
+					/>
+				</Grid>
+			);
+		}
+	}
+
     return (
         <>
         <div className={classes.formContainer}>
             <form onSubmit={FormSubmit}>
                 <Grid item container justifyContent="center">
-					<Typography variant="h4">MY INFO</Typography>
+					<Typography variant="h4">UPDATE MY INFO</Typography>
 				</Grid>
                 <Grid item container style={{ marginTop: "1rem" }}>
                     <TextField 	
@@ -178,6 +219,10 @@ function ProfileUpdate(props) {
 					onChange={(e) =>dispatch({type: "catchBioChange", bioChosen: e.target.value})}
 					/>
                 </Grid>
+                <Grid item container>
+                    {ProfilePicDisplay()}
+                </Grid>
+
                 <Grid item container xs={6}
                     style={{ marginTop: "1rem", marginLeft: "auto", marginRight: "auto" }}>
                     <Button 
@@ -195,11 +240,7 @@ function ProfileUpdate(props) {
                         />
                     </Button>
                 </Grid>
-                <Grid item container>
-                    <ul>
-                        {state.curPicture ? <li>{state.curPicture.name}</li> : ""}
-                    </ul>
-                </Grid>
+
                 <Grid item container xs={8}
 					style={{ marginTop: "1rem", marginLeft: "auto", marginRight: "auto" }}>
 					<Button 

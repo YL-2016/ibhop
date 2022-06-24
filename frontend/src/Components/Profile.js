@@ -19,8 +19,12 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { color } from "@mui/system";
+//Contexts
 import StateContext from "../Contexts/StateContext";
+//Components
 import ProfileUpdate from "./ProfileUpdate";
+//Assets
+import DefaultPic from "../Assets/DefaultPic.jpeg";
 
 
 const useStyles = makeStyles({
@@ -67,8 +71,10 @@ function Profile() {
 			emailAddress: "",
             profilePic:"",
             bio:"",
+            placeListing:[]
 		},
         dataIsLoading: true,
+
         
 	};
 
@@ -79,6 +85,7 @@ function Profile() {
 				draft.userProfile.emailAddress = action.profileObject.email_address;
 				draft.userProfile.profilePic = action.profileObject.profile_picture;
 				draft.userProfile.bio = action.profileObject.bio;
+                draft.userProfile.placeListing = action.profileObject.buddy_places_list;
 				break;
             case "loadingDone":
                 draft.dataIsLoading = false;
@@ -107,6 +114,28 @@ function Profile() {
 		}
 		GetProfileInfo();
 	}, []);
+
+    function placesDisplay(){
+        if (state.userProfile.placeListing.length === 0) {
+          return (
+            <Button disabled size="small">
+              Haven't Created Any Places Yet
+            </Button>
+          );
+        } else if (state.userProfile.placeListing.length === 1) {
+          return (
+            <Button size="small">
+              One Place Created
+            </Button>
+          );
+        } else {
+          return (
+            <Button size="small">
+              Created{" "}{state.userProfile.placeListing.length}{" "} places
+            </Button>
+          );
+        }
+      }
 
     function WelcomeDisplay(){
         if(
@@ -142,10 +171,9 @@ function Profile() {
 						<img
 							style={{ height: "10rem", width: "15rem" }}
 							src={
-								state.userProfile.profilePic 
-                                // !== null
-								// 	? state.userProfile.profilePic
-								// 	: defaultProfilePicture
+								state.userProfile.profilePic !== null 
+                                ? state.userProfile.profilePic 
+                                : DefaultPic
 							}
 						/>
 					</Grid>
@@ -160,7 +188,7 @@ function Profile() {
                         </Grid>
                         <Grid item xs={5}>
                             <Typography variant="h5" style={{textAlign:'center', marginTop:'0.8rem'}}>
-                                You have created X places 
+                                {placesDisplay()}
                             </Typography>
                         </Grid>
                     </Grid>
