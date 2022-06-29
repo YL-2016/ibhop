@@ -16,6 +16,7 @@ import {
 	TextField,
 	FormControlLabel,
 	Checkbox,
+	Snackbar
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import StateContext from "../Contexts/StateContext";
@@ -67,7 +68,9 @@ function ProfileUpdate(props) {
         profilePic:[],
         curPicture:props.userProfile.profilePic,
         placeList: [],
-        sendRequest:0
+        sendRequest:0,
+		openSnack: false,
+		disabledBtn: false,
         
 	};
 
@@ -91,6 +94,15 @@ function ProfileUpdate(props) {
             case "changeSendRequest":
                 draft.sendRequest = draft.sendRequest + 1;
                 break;
+			case "openTheSnack":
+				draft.openSnack = true;
+				break;
+			case "disableTheButton":
+				draft.disabledBtn = true;
+				break;
+			case "allowTheButton":
+				draft.disabledBtn = false;
+				break;
             
 		}
 	}
@@ -132,18 +144,27 @@ function ProfileUpdate(props) {
 						formData
 					);
                     //REFRESH AFTER SUCCESSFUL
-                    navigate(0);
+					dispatch({ type: "openTheSnack" });
 				} catch (e) {
-					console.log(e.response)
+					dispatch({ type: "allowTheButton" });
 				}
 			}
 			UpdateProfile();
 		}
 	}, [state.sendRequest]);
 
+	useEffect(() => {
+		if (state.openSnack) {
+			setTimeout(() => {
+				navigate(0);
+			}, 1200);
+		}
+	}, [state.openSnack]);
+
     function FormSubmit(e) {
 		e.preventDefault();
 		dispatch({ type: "changeSendRequest" });
+		dispatch({ type: "disableTheButton" });
 	}
     function ProfilePicDisplay() {
 		if (typeof state.curPicture !== "string") {
@@ -248,12 +269,21 @@ function ProfileUpdate(props) {
 					fullWidth 
 					type="submit" 
 					className={classes.registerBtn}
+					disabled={state.disabledBtn}
 					>
 						Update My Profile
 					</Button>
 				</Grid>
                 
             </form>
+			<Snackbar
+				open={state.openSnack}
+				message="You have successfully updated your profile!"
+				anchorOrigin={{
+					vertical: "bottom",
+					horizontal: "center",
+				}}
+		    />
         </div>
         </>
   )

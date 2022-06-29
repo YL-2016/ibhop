@@ -22,3 +22,15 @@ class placeList(generics.ListAPIView):
 class placeCreation(generics.CreateAPIView):
     queryset = place.objects.all()
     serializer_class = placeSerializer
+
+class placeDetail(generics.RetrieveAPIView):
+    queryset = place.objects.all()
+    serializer_class = placeSerializer
+
+class placeDelete(generics.DestroyAPIView):
+    queryset = place.objects.all()
+    serializer_class = placeSerializer
+
+class placeUpdate(generics.UpdateAPIView):
+    queryset = place.objects.all()
+    serializer_class = placeSerializer

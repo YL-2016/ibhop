@@ -100,13 +100,15 @@ function Buddy() {
           );
         } else if (buddy.buddy_places_list.length === 1) {
           return (
-            <Button size="small">
+            <Button size="small"
+			onClick={()=>navigate(`/Buddy/${buddy.creator}`)}>
               One Place Created
             </Button>
           );
         } else {
           return (
-            <Button size="small">
+            <Button size="small"
+			onClick={()=>navigate(`/Buddy/${buddy.creator}`)}>
               Created{" "}{buddy.buddy_places_list.length}{" "} places
             </Button>
           );

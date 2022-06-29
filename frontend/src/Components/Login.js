@@ -50,24 +50,42 @@ function Login() {
 		usernameValue: "",
 		emailValue: "",
 		sendRequest: 0,
-    token:'',
-    showPassword:false,
-	};
+		token:'',
+		showPassword:false,
+		openSnack: false,
+		disabledBtn: false,
+		serverError: false,
+		};
 
 	function Reducer(draft, action) {
 		switch (action.type) {
 			case "catchUsernameChange":
 				draft.usernameValue = action.usernameChosen;
+				draft.serverError = false;
 				break;
 			case "catchPasswordChange":
 				draft.passwordValue = action.passwordChosen;
+				//we need to update this!!! don't forget!!!
+				draft.serverError = false;
 				break;
 			case "changeSendRequest":
 				draft.sendRequest = draft.sendRequest + 1;
 				break;
-      case "catchToken":
-        draft.token = action.tokenValue;
-        break;
+			case "catchToken":
+				draft.token = action.tokenValue;
+				break;
+			case "openTheSnack":
+				draft.openSnack = true;
+				break;
+			case "disableTheButton":
+				draft.disabledBtn = true;
+				break;
+			case "allowTheButton":
+				draft.disabledBtn = false;
+				break;
+			case "catchServerError":
+				draft.serverError = true;
+				break;
 		}
 	}
 	const [state, dispatch] = useImmerReducer(Reducer, initialState);
@@ -75,7 +93,16 @@ function Login() {
   function FormSubmit(e) {
 		e.preventDefault();
 		dispatch({ type: "changeSendRequest" });
+		dispatch({ type: "disableTheButton" });
 	}
+
+  useEffect(() => {
+		if (state.openSnack) {
+			setTimeout(() => {
+				navigate("/");
+			}, 1200);
+		}
+	}, [state.openSnack]);
 
   useEffect(() => {
 		if (state.sendRequest) {
@@ -92,19 +119,21 @@ function Login() {
 							cancelToken: source.token,
 						}
 					);
-          dispatch({
-						type: "catchToken",
-						tokenValue: response.data.auth_token,
-					});
-          globalDispatch({
-						type: "catchToken",
-						tokenValue: response.data.auth_token,
-					});
+					dispatch({
+									type: "catchToken",
+									tokenValue: response.data.auth_token,
+								});
+					globalDispatch({
+									type: "catchToken",
+									tokenValue: response.data.auth_token,
+								});
           //console.log(response);
 
 					//navigate('/')
 				} catch (error) {
-          console.log(error.response)
+					dispatch({ type: "allowTheButton" });
+					dispatch({ type: "catchServerError" });
+          //console.log(error.response)
 				}
 			}
 			SignIn();
@@ -130,13 +159,13 @@ function Login() {
 						}
 					);
           //console.log(response);
-          globalDispatch({
-						type: "userSignIn",
-						usernameInfo: response.data.username,
-						emailInfo: response.data.email,
-						idInfo: response.data.id,
-					});
-					navigate('/')
+				globalDispatch({
+								type: "userSignIn",
+								usernameInfo: response.data.username,
+								emailInfo: response.data.email,
+								idInfo: response.data.id,
+							});
+					dispatch({ type: "openTheSnack" });
 				} catch (error) {
           console.log(error.response)
 				}
@@ -153,6 +182,11 @@ function Login() {
               <Grid item container justifyContent="center">
                 <Typography variant="h4">Sign In Your Account</Typography>
               </Grid>
+			  {state.serverError ? (
+					<Alert severity="error">Incorrect username or password!</Alert>
+				) : (
+					""
+				)}
               <Grid item container style={{ marginTop: "2rem" }}>
                   <TextField 	
                   id="username" 
@@ -160,8 +194,9 @@ function Login() {
                   variant="outlined" 
                   fullWidth
                   value={state.usernameValue}
-					        onChange={(e) =>dispatch({type: "catchUsernameChange", usernameChosen: e.target.value})}
-					        />
+				  onChange={(e) =>dispatch({type: "catchUsernameChange", usernameChosen: e.target.value})}
+				  error={state.serverError ? true : false}
+				   />
               </Grid>
               <Grid item container style={{ marginTop: "0.5rem" }}>
                   <TextField 	
@@ -172,11 +207,13 @@ function Login() {
                   variant="outlined" 
                   fullWidth
                   value={state.passwordValue}
-					        onChange={(e) =>dispatch({type: "catchPasswordChange", passwordChosen: e.target.value})}
-					        />
+				  onChange={(e) =>dispatch({type: "catchPasswordChange", passwordChosen: e.target.value})}
+				  error={state.serverError ? true : false}
+					/>
+					
               </Grid>
               <Grid item container xs={8} style={{ marginTop: "2rem", marginLeft: "auto", marginRight: "auto" }}>
-                <Button variant="contained" fullWidth type="submit" className={classes.loginBtn}>
+                <Button variant="contained" fullWidth type="submit" className={classes.loginBtn} disabled={state.disabledBtn}>
                   SIGN IN
                 </Button>
               </Grid>
@@ -192,6 +229,14 @@ function Login() {
               </span>
             </Typography>
           </Grid>
+		  <Snackbar
+				open={state.openSnack}
+				message="You have successfully logged in!"
+				anchorOrigin={{
+					vertical: "bottom",
+					horizontal: "center",
+				}}
+		/>
       </div>
   )
 }

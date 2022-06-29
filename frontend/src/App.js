@@ -14,6 +14,8 @@ import Buddy from './Components/Buddy';
 import UserRegister from './Components/UserRegister';
 import AddPlace from './Components/AddPlace';
 import Profile from './Components/Profile';
+import BuddyDetail from './Components/BuddyDetail';
+import PlaceDetail from './Components/PlaceDetail';
 
 //contexts
 import DispatchContext from './Contexts/DispatchContext';
@@ -73,11 +75,13 @@ function App() {
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/login' element={<Login/>} />
-            <Route path='/Placelist' element={<Placelist />} />
+            <Route path='/PlaceList' element={<Placelist />} />
             <Route path='/UserRegister' element={<UserRegister />} />
             <Route path='/Buddy' element={<Buddy />} />
+            <Route path='/Buddy/:id' element={<BuddyDetail />} />
             <Route path='/AddPlace' element={<AddPlace />} />
             <Route path='/Profile' element={<Profile />}/>
+            <Route path='/PlaceList/:id' element={<PlaceDetail />}/>
           </Routes>
           </BrowserRouter>
         </StyledEngineProvider>

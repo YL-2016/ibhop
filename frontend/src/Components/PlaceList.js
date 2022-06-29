@@ -30,8 +30,8 @@ const useStyles = makeStyles({
     paddingRight:"5px",
     paddingLeft:"5px",
     height:"230px",
-    width:"450px"
-
+    width:"450px",
+    cursor:"pointer",
   },
   adressOverlay:{
     position:'absolute',
@@ -47,7 +47,7 @@ function PlaceList() {
   
   //
   //fetch('http://localhost:8000/api/places/').then(response=> response.json()).then(data=>console.log(data))
-
+  const navigate = useNavigate();
   const classes = useStyles();
   const ArtMuseumIcon = new Icon({
     iconUrl: ArtMuseumIconPng,
@@ -175,12 +175,17 @@ function PlaceList() {
                               width:"16rem",
                               marginLeft: 'auto',
                               marginRight: 'auto',
-                              borderRadius: '8px',}} 
+                              borderRadius: '8px',
+                              cursor:"pointer",}} 
+                           onClick={()=>navigate(`/PlaceList/${place.id}`)}
+                           
                       />
                       <Typography variant='body1'>
                         {place.description.toString(0,50)}...
                       </Typography>
-                      <Button variant="contained" fullWidth>More Info</Button>
+                      <Button variant="contained" fullWidth
+                      onClick={()=>navigate(`/PlaceList/${place.id}`)}>
+                        More Info</Button>
                     </Popup>
                   </Marker>
                 )
@@ -207,16 +212,25 @@ function PlaceList() {
                 component="img"
                 image={place.pic}
                 alt={place.title}
+                onClick={()=>navigate(`/PlaceList/${place.id}`)}
               />
               <CardContent>
                 <Typography variant="body2">
                   {place.description.toString(0,50)}
                 </Typography>
-              </CardContent>
-              <CardActions disableSpacing>
-                <IconButton aria-label="add to favorites">
-                  {place.creator_lname_username}
-                </IconButton>
+              </CardContent> 
+              <CardActions>
+                <Button
+                  onClick={()=>navigate(`/PlaceList/${place.id}`)}
+                  style={{color:'#71AFED'}}>
+                      More Detail
+                </Button>
+              </CardActions>       
+              <CardActions disableSpacing style={{font:"10px"}}>
+                <Button aria-label="add to favorites" 
+                onClick={()=>navigate(`/Buddy/${place.creator}`)}>
+                  Created By:{place.creator_lname_username}
+                </Button>
               </CardActions>
             </Card>
           )

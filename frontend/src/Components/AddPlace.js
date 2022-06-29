@@ -6,8 +6,7 @@ import { useImmerReducer } from "use-immer";
 //https://djoser.readthedocs.io/en/latest/settings.html#send-activation-email
 // MUI
 import {
-	Grid,AppBar,Typography,Button,Card,CardHeader,CardMedia,CardContent,CircularProgress,
-    TextField,Snackbar,Alert,
+	Grid,AppBar,Typography,Button,TextField,Snackbar,Alert,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 // React Leaflet
@@ -142,8 +141,32 @@ function AddPlace() {
 			creatorName: "",
 			emailAddress: "",
 		},
-
-
+        openSnack: false,
+		disabledBtn: false,
+        titleErrors: {
+			hasErrors: false,
+			errorMessage: "",
+		},
+        areaErrors: {
+			hasErrors: false,
+			errorMessage: "",
+		},
+        parkingErrors: {
+			hasErrors: false,
+			errorMessage: "",
+		},
+        buddyNumErrors: {
+			hasErrors: false,
+			errorMessage: "",
+		},
+        entryFeeErrors: {
+			hasErrors: false,
+			errorMessage: "",
+		},
+        placeTypeErrors: {
+			hasErrors: false,
+			errorMessage: "",
+		},
 
 	};
 
@@ -151,24 +174,36 @@ function AddPlace() {
 		switch (action.type) {
 			case "catchTitleChange":
 				draft.titleValue = action.titleChosen;
+                draft.titleErrors.hasErrors = false;
+				draft.titleErrors.errorMessage = "";
 				break;
             case "catchPlaceTypeChange":
 				draft.placeTypeValue = action.placeTypeChosen;
+                draft.placeTypeErrors.hasErrors = false;
+				draft.placeTypeErrors.errorMessage = "";
 				break;
             case "catchDescriptionChange":
 				draft.descriptionValue = action.descriptionChosen;
 				break;
             case "catchAreaChange":
                 draft.areaValue = action.areaValueChosen;
+                draft.areaErrors.hasErrors = false;
+				draft.areaErrors.errorMessage = "";
                 break;
             case "catchEntryFeeChange":
                 draft.entryFeeValue = action.entryFeeChosen;
+                draft.entryFeeErrors.hasErrors = false;
+				draft.entryFeeErrors.errorMessage = "";
                 break;
             case "catchParkingChange":
                 draft.parkingValue = action.parkingChosen;
+                draft.parkingErrors.hasErrors = false;
+				draft.parkingErrors.errorMessage = "";
                 break;
             case "catchBuddyNumChange":
                 draft.buddyNumValue = action.buddyNumChosen;
+                draft.buddyNumErrors.hasErrors = false;
+				draft.buddyNumErrors.errorMessage = "";
                 break;
             case "catchLatitudeChange":
                 draft.latitudeValue = action.latitudeChosen;
@@ -208,8 +243,77 @@ function AddPlace() {
 				draft.userProfile.creatorName = action.profileObject.creator_name;
 				draft.userProfile.emailAddress = action.profileObject.email_address;
 				break;
-            
-		}
+            case "openTheSnack":
+                draft.openSnack = true;
+                break;
+            case "disableTheButton":
+                draft.disabledBtn = true;
+                break;
+            case "allowTheButton":
+                draft.disabledBtn = false;
+                break;
+            case "catchTitleErrors":
+                if (action.titleChosen.length === 0) {
+                    draft.titleErrors.hasErrors = true;
+                    draft.titleErrors.errorMessage = "This field must not be empty";
+                }
+                break;
+            case "catchAreaErrors":
+				if (action.areaChosen.length === 0) {
+					draft.areaErrors.hasErrors = true;
+					draft.areaErrors.errorMessage = "This field must not be empty";
+				}
+				break;
+            case "catchParkingErrors":
+                if (action.parkingChosen.length === 0) {
+                    draft.parkingErrors.hasErrors = true;
+                    draft.parkingErrors.errorMessage = "This field must not be empty";
+                }
+            break;
+            case "catchBuddyNumErrors":
+                if (action.buddyNumChosen.length === 0) {
+                    draft.buddyNumErrors.hasErrors = true;
+                    draft.buddyNumErrors.errorMessage = "This field must not be empty";
+                }
+            break;
+            case "catchEntryFeeErrors":
+                if (action.entryFeeChosen.length === 0) {
+                    draft.entryFeeErrors.hasErrors = true;
+                    draft.entryFeeErrors.errorMessage = "This field must not be empty";
+                }
+            break;
+            case "catchPlaceTypeErrors":
+                if (action.placeTypeChosen.length === 0) {
+                    draft.placeTypeErrors.hasErrors = true;
+                    draft.placeTypeErrors.errorMessage = "This field must not be empty";
+                }
+            break;
+
+            case "emptyTitle":
+				draft.titleErrors.hasErrors = true;
+				draft.titleErrors.errorMessage = "This field must not be empty";
+			break;
+            case "emptyPlaceType":
+				draft.placeTypeErrors.hasErrors = true;
+				draft.placeTypeErrors.errorMessage = "This field must not be empty";
+			break;
+            case "emptyEntryFee":
+				draft.entryFeeErrors.hasErrors = true;
+				draft.entryFeeErrors.errorMessage = "This field must not be empty";
+			break;
+            case "emptyParking":
+				draft.parkingErrors.hasErrors = true;
+				draft.parkingErrors.errorMessage = "This field must not be empty";
+			break;
+            case "emptyBuddyNum":
+				draft.buddyNumErrors.hasErrors = true;
+				draft.buddyNumErrors.errorMessage = "This field must not be empty";
+			break;
+            case "emptyArea":
+				draft.areaErrors.hasErrors = true;
+				draft.areaErrors.errorMessage = "This field must not be empty";
+			break;
+    }
 	}
 
 	const [state, dispatch] = useImmerReducer(Reducer, initialState);
@@ -299,14 +403,53 @@ function AddPlace() {
 					type: "catchUserProfileInfo",
 					profileObject: response.data,
 				});
-			} catch (e) {}
+			} catch (e) {
+            }
 		}
 		GetProfileInfo();
 	}, []);
 
+    useEffect(() => {
+		if (state.openSnack) {
+			setTimeout(() => {
+				navigate("/PlaceList");
+			}, 1200);
+		}
+	}, [state.openSnack]);
+
     function FormSubmit(e) {
         e.preventDefault();
-        dispatch({ type: "changeSendRequest" });
+        if(
+            !state.titleErrors.hasErrors &&
+            !state.placeTypeErrors.hasErrors &&
+            !state.entryFeeErrors.hasErrors &&
+            !state.parkingErrors.hasErrors &&
+            !state.buddyNumErrors.hasErrors &&
+            !state.areaErrors.hasErrors &&
+            state.latitudeValue &&
+            state.longitudeValue
+        ){
+            dispatch({ type: "changeSendRequest" });
+            dispatch({ type: "disableTheButton" });
+        }else if (state.titleValue === "") {
+			dispatch({ type: "emptyTitle" });
+			window.scrollTo(0, 0);
+		}else if (state.placeTypeValue === "") {
+			dispatch({ type: "emptyPlaceType" });
+			window.scrollTo(0, 0);
+		}else if (state.entryFeeValue === "") {
+			dispatch({ type: "emptyEntryFee" });
+			window.scrollTo(0, 0);
+		}else if (state.parkingValue === "") {
+			dispatch({ type: "emptyParking" });
+			window.scrollTo(0, 0);
+		}else if (state.buddyNumValue === "") {
+			dispatch({ type: "emptyBuddyNum" });
+			window.scrollTo(0, 0);
+		}else if (state.areaValue === "") {
+			dispatch({ type: "emptyArea" });
+			window.scrollTo(0, 0);
+		}
     }
 
     //only users with completed profile ablt to submit new place
@@ -324,6 +467,7 @@ function AddPlace() {
                 fullWidth 
                 type="submit" 
                 className={classes.registerBtn}
+                disabled={state.disabledBtn}
                 >
                     SUBMIT
                 </Button>
@@ -353,7 +497,7 @@ function AddPlace() {
                     className={classes.registerBtn}
 					onClick={() => navigate("/login")}
 				>
-					PLEASE SIGN IN TO BEFORE ADD A NEW PLACE
+					PLEASE SIGN IN BEFORE ADD A NEW PLACE
 				</Button>
 			);
         }
@@ -384,8 +528,10 @@ function AddPlace() {
 						"http://localhost:8000/api/places/create/",
 						formData
 					);
+                    dispatch({ type: "openTheSnack" });
 				} catch (e) {
-					console.log(e.response)
+					//console.log(e.response)
+                    dispatch({ type: "allowTheButton" });
 				}
 			}
 			UpdateProfile();
@@ -395,7 +541,9 @@ function AddPlace() {
     return (
         <div className={classes.formContainer}>
             <form onSubmit={FormSubmit}>
-                <Grid item container justifyContent="center">
+            <Alert severity="info">Note:To add a new place successfully, 
+            please LOGIN first and make sure you have added your profile info.</Alert>
+                <Grid item container justifyContent="center" style={{ marginTop: "1.5rem" }}>
                     <Typography variant="h4">Create A Place</Typography>
                 </Grid>
                 <Grid item container style={{ marginTop: "0.5rem" }}>
@@ -407,6 +555,14 @@ function AddPlace() {
                     fullWidth
                     value={state.titleValue}
                     onChange={(e) =>dispatch({type: "catchTitleChange", titleChosen: e.target.value})}
+                    onBlur={(e) =>
+                        dispatch({
+                            type: "catchTitleErrors",
+                            titleChosen: e.target.value,
+                        })
+                    }
+                    error={state.titleErrors.hasErrors ? true : false}
+                    helperText={state.titleErrors.errorMessage}
                     />
                 </Grid>
                 <Grid item container justifyContent="space-between">
@@ -422,6 +578,14 @@ function AddPlace() {
                         SelectProps={{
                             native: true,
                           }}
+                        onBlur={(e) =>
+							dispatch({
+								type: "catchPlaceTypeErrors",
+								placeTypeChosen: e.target.value,
+							})
+						}
+						error={state.placeTypeErrors.hasErrors ? true : false}
+						helperText={state.placeTypeErrors.errorMessage}
                         >
                             {placeTypeOptions.map((option) => (
                                 <option key={option.value} value={option.value}>
@@ -442,6 +606,14 @@ function AddPlace() {
                         SelectProps={{
                             native: true,
                           }}
+                        onBlur={(e) =>
+							dispatch({
+								type: "catchAreaErrors",
+								areaChosen: e.target.value,
+							})
+						}
+						error={state.areaErrors.hasErrors ? true : false}
+						helperText={state.areaErrors.errorMessage}
                         >
                             {areaOptions.map((option) => (
                                 <option key={option.value} value={option.value}>
@@ -464,6 +636,14 @@ function AddPlace() {
                         SelectProps={{
                             native: true,
                         }}
+                        onBlur={(e) =>
+							dispatch({
+								type: "catchParkingErrors",
+								parkingChosen: e.target.value,
+							})
+						}
+						error={state.parkingErrors.hasErrors ? true : false}
+						helperText={state.parkingErrors.errorMessage}
                         >
                             {parkingFeeTypeOptions.map((option) => (
                                 <option key={option.value} value={option.value}>
@@ -481,6 +661,14 @@ function AddPlace() {
                         fullWidth
                         value={state.entryFeeValue}
                         onChange={(e) =>dispatch({type: "catchEntryFeeChange", entryFeeChosen: e.target.value})}
+                        onBlur={(e) =>
+							dispatch({
+								type: "catchEntryFeeErrors",
+								entryFeeChosen: e.target.value,
+							})
+						}
+						error={state.entryFeeErrors.hasErrors ? true : false}
+						helperText={state.entryFeeErrors.errorMessage}
                         />
                     </Grid>
                 </Grid>
@@ -493,9 +681,29 @@ function AddPlace() {
                     fullWidth
                     value={state.buddyNumValue}
                     onChange={(e) =>dispatch({type: "catchBuddyNumChange", buddyNumChosen: e.target.value})}
+                    onBlur={(e) =>
+                        dispatch({
+                            type: "catchBuddyNumErrors",
+                            buddyNumChosen: e.target.value,
+                        })
+                    }
+                    error={state.buddyNumErrors.hasErrors ? true : false}
+                    helperText={state.buddyNumErrors.errorMessage}
                     />
                 </Grid>
                 {/* MAP -- for map to show we need to add a style*/}
+                <Grid item style={{ marginTop: "1rem" }}>
+					{state.latitudeValue && state.longitudeValue ? (
+						<Alert severity="success">
+							You place is located at {state.latitudeValue},{" "}
+							{state.longitudeValue}
+						</Alert>
+					) : (
+						<Alert severity="warning">
+							Please choose the Area first, and then drag the marker to locate your place on the map before submitting this form
+						</Alert>
+					)}
+				</Grid>
                 <Grid item container style={{height:"60vh",  marginTop: "1rem" }}>
                     <MapContainer center={[45.889076327889704, 166.8795827641737]} zoom={2} scrollWheelZoom={true}>
                             <TileLayer
@@ -516,28 +724,6 @@ function AddPlace() {
                     Note: Please choose the area first and then drag the marker to mark the precise location.
                     </Typography>
                 </Grid>
-                {/* <Grid item container justifyContent="space-between">
-                    <Grid item container xs={5} style={{ marginTop: "0.5rem" }}>
-                        <TextField 	
-                        id="latitude" 
-                        label="Latitude" 
-                        variant="standard" 
-                        fullWidth
-                        value={state.latitudeValue}
-                        onChange={(e) =>dispatch({type: "catchLatitudeChange", latitudeChosen: e.target.value})}
-                        />
-                    </Grid>
-                    <Grid item container xs={5} style={{ marginTop: "0.5rem" }}>
-                        <TextField 	
-                        id="longitude" 
-                        label="Longitude" 
-                        variant="standard" 
-                        fullWidth
-                        value={state.longitudeValue}
-                        onChange={(e) =>dispatch({type: "catchLongitudeChange", longitudeChosen: e.target.value})}
-                        />
-                    </Grid>
-                </Grid> */}
                 <Grid item container style={{ marginTop: "1rem" }}>
                     <TextField 	
                     id="description" 
@@ -562,7 +748,7 @@ function AddPlace() {
                         <input
                             type="file"
                             multiple
-                            accept="image/png, image/gif, image/jpeg"
+                            accept="image/png, image/gif, image/jpeg, image/jpg"
                             onChange={(e)=>dispatch({type: "catchUploadedPictures", picturesChosen: e.target.files})}
                         />
                     </Button>
@@ -582,6 +768,14 @@ function AddPlace() {
 
                 </Grid>
             </form>
+            <Snackbar
+				open={state.openSnack}
+				message="You have successfully added a new place!"
+				anchorOrigin={{
+					vertical: "bottom",
+					horizontal: "center",
+				}}
+		    />
             {/* <Button onClick={()=>state.mapInstance.flyTo([43,-79], 15)}>TestButton</Button> */}
         </div>
         )

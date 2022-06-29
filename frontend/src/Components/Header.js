@@ -1,8 +1,8 @@
-import React, { useState, useContext} from 'react';
+import React, { useState, useContext, useEffect} from 'react';
 import Axios from "axios";
 import {Link, useNavigate} from "react-router-dom";
 //MUI
-import { Button, Typography, Grid, AppBar, Toolbar, Menu, MenuItem} from '@mui/material';
+import { Button, Typography, Grid, AppBar, Toolbar, Menu, MenuItem,Snackbar} from '@mui/material';
 import { makeStyles } from '@mui/styles';
 //Component
 import { borderRadius } from '@mui/system';
@@ -62,11 +62,13 @@ const useStyles = makeStyles({
     }
 })
 
+
 function Header() {
   const classes = useStyles();
   const navigate = useNavigate();
   const globalState = useContext(StateContext);
   const globalDispatch = useContext(DispatchContext);
+  const [openSnack, setopenSnack] = useState(false)
 
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -81,6 +83,7 @@ function Header() {
       setAnchorEl(null);
       navigate('/Profile')
   }
+
   async function handleLogOut() {
     setAnchorEl(null);
     const confirmLogout = window.confirm("Logging out?");
@@ -93,28 +96,35 @@ function Header() {
             );
 
             globalDispatch({ type: "logout" });
-            navigate('/')
+            setopenSnack(true);
         } catch (error) {
             console.log(error.response)
         }
     }
 }
+useEffect(() => {
+    if (openSnack) {
+        setTimeout(() => {
+            navigate(0);
+        }, 1200);
+    }
+}, [openSnack]);
 
   return (
     <AppBar position="static" style={{backgroundColor:'#71AFED'}}>
         <Toolbar>
             <div className={classes.leftNav}>
                 <Button color="inherit" onClick={()=>navigate('/')}>
-                    <Typography variant="h4" component="div">
-                        LBTTP
+                    <Typography variant="h6" component="div">
+                    Location-Based Travelling-Together Planner
                     </Typography>
                 </Button>
             </div>
-            <div className={classes.titleExplain}>
+            {/* <div className={classes.titleExplain}>
                 <Typography variant="subtitle2" component="div">
                         Location-Based Travelling-Together Planner
                 </Typography>
-            </div>
+            </div> */}
             <div className={classes.rightNav}>
                 <Button color="inherit" onClick={()=>navigate('/PlaceList')}>
                     <Typography variant="h7" component="div" style={{marginRight:"1rem"}}>
@@ -156,7 +166,14 @@ function Header() {
                     <MenuItem className={classes.userPageBtn} onClick={handleProfile}>Update Profile</MenuItem>
                     <MenuItem className={classes.logoutBtn} onClick={handleLogOut}>Logout</MenuItem>
                 </Menu>
-                
+                <Snackbar
+				open={openSnack}
+				message="You have successfully logged out!"
+				anchorOrigin={{
+					vertical: "bottom",
+					horizontal: "center",
+				}}
+		        />
             </div>
         </Toolbar>
         </AppBar> 

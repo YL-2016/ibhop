@@ -71,7 +71,8 @@ function Profile() {
 			emailAddress: "",
             profilePic:"",
             bio:"",
-            placeListing:[]
+            placeListing:[],
+            creatorId:"",
 		},
         dataIsLoading: true,
 
@@ -86,6 +87,7 @@ function Profile() {
 				draft.userProfile.profilePic = action.profileObject.profile_picture;
 				draft.userProfile.bio = action.profileObject.bio;
                 draft.userProfile.placeListing = action.profileObject.buddy_places_list;
+                draft.userProfile.creatorId = action.profileObject.creator;
 				break;
             case "loadingDone":
                 draft.dataIsLoading = false;
@@ -124,13 +126,15 @@ function Profile() {
           );
         } else if (state.userProfile.placeListing.length === 1) {
           return (
-            <Button size="small">
+            <Button size="small"
+            onClick={()=>navigate(`/Buddy/${state.userProfile.creatorId}`)}>
               One Place Created
             </Button>
           );
         } else {
           return (
-            <Button size="small">
+            <Button size="small"
+            onClick={()=>navigate(`/Buddy/${state.userProfile.creatorId}`)}>
               Created{" "}{state.userProfile.placeListing.length}{" "} places
             </Button>
           );
@@ -158,7 +162,7 @@ function Profile() {
 				<Grid
 					container
 					style={{
-						width: "60%",
+						width: "50%",
 						marginLeft: "auto",
 						marginRight: "auto",
 						marginTop: "1rem",
@@ -169,7 +173,7 @@ function Profile() {
 					}}>
 					<Grid item xs={5}>
 						<img
-							style={{ height: "10rem", width: "15rem" }}
+							style={{ height: "10rem", width: "12rem" }}
 							src={
 								state.userProfile.profilePic !== null 
                                 ? state.userProfile.profilePic 
