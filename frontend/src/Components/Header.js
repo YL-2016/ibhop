@@ -116,7 +116,7 @@ useEffect(() => {
             <div className={classes.leftNav}>
                 <Button color="inherit" onClick={()=>navigate('/')}>
                     <Typography variant="h6" component="div">
-                    Location-Based Travelling-Together Planner
+                    Location-Based Hang Out Planner
                     </Typography>
                 </Button>
             </div>
