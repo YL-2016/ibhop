@@ -13,9 +13,10 @@ import {
     Button,
     Dialog,
 	Snackbar,
+    styled
     
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+//import { makeStyles } from "@mui/styles";
 import { color } from "@mui/system";
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
@@ -33,7 +34,7 @@ import StateContext from "../Contexts/StateContext";
 import DefaultPic from "../Assets/DefaultPic.jpeg";
 
 
-const useStyles = makeStyles({
+const useStyles = styled({
 	sliderContainer: {
 		position: "relative",
 		marginTop: "2rem",
@@ -236,6 +237,8 @@ function PlaceDetail() {
                 item
                 container
                 justifyContent="center"
+                style={{position: "relative",
+                marginTop: "2rem",}}
                 className={classes.sliderContainer}
             >
                 {listPics.map((picture, index) => {
@@ -254,11 +257,29 @@ function PlaceDetail() {
                 })}
                 <ArrowBackIosNewOutlinedIcon
                     onClick={PreviousPicture}
+                    style={{position: "absolute",
+                    cursor: "pointer",
+                    fontSize: "3rem",
+                    color: "#E9B7C6",
+                    top: "50%",
+                    left: "17.5%",
+                    "&:hover": {
+                        backgroundColor: "#71AFED",
+                    },}}
                     className={classes.leftArrow}
                 />
                 <ArrowForwardIosOutlinedIcon
                     onClick={NextPicture}
                     className={classes.rightArrow}
+                    style={{position: "absolute",
+                    cursor: "pointer",
+                    fontSize: "3rem",
+                    color: "#E9B7C6",
+                    top: "50%",
+                    right: "17.5%",
+                    "&:hover": {
+                        backgroundColor: "#71AFED",
+                    },}}
                 />
             </Grid>
         ) : (

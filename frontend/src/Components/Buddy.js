@@ -17,8 +17,9 @@ import {
 	FormControlLabel,
 	Checkbox,
   CardActions,
+  styled
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+//import { makeStyles } from "@mui/styles";
 import { color } from "@mui/system";
 //Contexts
 import StateContext from "../Contexts/StateContext";
@@ -28,7 +29,7 @@ import ProfileUpdate from "./ProfileUpdate";
 import DefaultPic from "../Assets/DefaultPic.jpeg";
 
 
-const useStyles = makeStyles({
+const useStyles = styled({
 
 });
 function Buddy() {

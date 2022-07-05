@@ -16,13 +16,14 @@ import {
 	TextField,
 	FormControlLabel,
 	Checkbox,
-	Snackbar
+	Snackbar,
+	styled
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+//import { makeStyles } from "@mui/styles";
 import StateContext from "../Contexts/StateContext";
 import { color } from "@mui/system";
 
-const useStyles = makeStyles({
+const useStyles = styled({
     formContainer: {
 		width: "75%",
 		marginLeft: "auto",
@@ -201,7 +202,16 @@ function ProfileUpdate(props) {
 
     return (
         <>
-        <div className={classes.formContainer}>
+        <div 
+		style={{width: "75%",
+		marginLeft: "auto",
+		marginRight: "auto",
+		marginTop: "3rem",
+		border: "5px solid",
+		padding: "2rem",
+        color: "#E9B7C6",
+        boxShadow: '3px 3px 3px #E9B7C6'}}
+		className={classes.formContainer}>
             <form onSubmit={FormSubmit}>
                 <Grid item container justifyContent="center">
 					<Typography variant="h4">UPDATE MY INFO</Typography>
@@ -250,6 +260,14 @@ function ProfileUpdate(props) {
                     variant="contained" 
                     conponent="label"
                     fullWidth 
+					style={{backgroundColor: "#E9B7C6",
+					color: "white",
+					fontSize: "0.8rem",
+					marginLeft: "1rem",
+					border: "1px solid white",
+					"&:hover": {
+						backgroundColor: "#139879",
+					},}}
                     className={classes.addPicBtn}
                     >
                         Upload Profile Picture
@@ -268,6 +286,13 @@ function ProfileUpdate(props) {
 					variant="contained" 
 					fullWidth 
 					type="submit" 
+					style={{backgroundColor: "#E9B7C6",
+					color: "white",
+					fontSize: "1.1rem",
+					marginLeft: "1rem",
+					"&:hover": {
+						backgroundColor: "#139879",
+					},}}
 					className={classes.registerBtn}
 					disabled={state.disabledBtn}
 					>

@@ -7,13 +7,13 @@ import { useImmerReducer } from "use-immer";
 // MUI
 import {
 	Grid,AppBar,Typography,Button,Card,CardHeader,CardMedia,CardContent,CircularProgress,
-    TextField,Snackbar,Alert,
+    TextField,Snackbar,Alert,styled
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+//import { makeStyles } from "@mui/styles";
 // Contexts
 import StateContext from "../Contexts/StateContext";
 
-const useStyles = makeStyles({
+const useStyles = styled({
     formContainer: {
 		width: "80%",
 		marginLeft: "auto",
@@ -33,16 +33,6 @@ const useStyles = makeStyles({
 			backgroundColor: "#139879",
 		},
 	},
-    addPicBtn:{
-        backgroundColor: "#E9B7C6",
-		color: "white",
-		fontSize: "0.8rem",
-		marginLeft: "1rem",
-        border: "1px solid white",
-		"&:hover": {
-			backgroundColor: "#139879",
-		},
-    }
 
 });
 
@@ -189,7 +179,15 @@ function PlaceUpdate(props) {
 	}, [state.sendRequest]);
 
     return (
-        <div className={classes.formContainer}>
+        <div className={classes.formContainer}
+        style={{width: "80%",
+		marginLeft: "auto",
+		marginRight: "auto",
+		marginTop: "3rem",
+		border: "5px solid",
+		padding: "2rem",
+        color: "#E9B7C6",
+        boxShadow: '3px 3px 3px #E9B7C6'}}>
             <form onSubmit={FormSubmit}>
                 <Grid item container justifyContent="center">
                     <Typography variant="h4">Update Place Info</Typography>
@@ -290,6 +288,13 @@ function PlaceUpdate(props) {
                     fullWidth 
                     type="submit" 
                     className={classes.registerBtn}
+                    style={{backgroundColor: "#E9B7C6",
+                    color: "white",
+                    fontSize: "1.1rem",
+                    marginLeft: "1rem",
+                    "&:hover": {
+                        backgroundColor: "#139879",
+                    },}}
                     disabled={state.disabledBtn}
                     >
                         UPDATE

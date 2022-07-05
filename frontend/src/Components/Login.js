@@ -5,15 +5,15 @@ import { useImmerReducer } from "use-immer";
 // MUI
 import {
 	Grid,AppBar,Typography,Button,Card,CardHeader,CardMedia,CardContent,CircularProgress,
-    TextField,Snackbar,Alert,
+    TextField,Snackbar,Alert,styled
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+//import { makeStyles } from "@mui/styles";
 
 //Contexts
 import DispatchContext from "../Contexts/DispatchContext";
 import StateContext from "../Contexts/StateContext";
 
-const useStyles = makeStyles({
+const useStyles = styled({
     formContainer: {
 		width: "50%",
 		marginLeft: "auto",
@@ -177,7 +177,16 @@ function Login() {
 		}
 	}, [state.token]);
   return (
-      <div className={classes.formContainer}>
+      <div 
+	  style={{width: "50%",
+	  marginLeft: "auto",
+	  marginRight: "auto",
+	  marginTop: "10rem",
+	  border: "5px solid",
+	  padding: "2rem",
+	  color: "#E9B7C6",
+	  boxShadow: '3px 3px 3px #E9B7C6'}}
+	  className={classes.formContainer}>
           <form onSubmit={FormSubmit}>
               <Grid item container justifyContent="center">
                 <Typography variant="h4">Sign In Your Account</Typography>
@@ -213,7 +222,17 @@ function Login() {
 					
               </Grid>
               <Grid item container xs={8} style={{ marginTop: "2rem", marginLeft: "auto", marginRight: "auto" }}>
-                <Button variant="contained" fullWidth type="submit" className={classes.loginBtn} disabled={state.disabledBtn}>
+                <Button variant="contained" fullWidth type="submit" 
+				style={{
+					backgroundColor: "#E9B7C6",
+					color: "white",
+					fontSize: "1.1rem",
+					marginLeft: "1rem",
+					"&:hover": {
+						backgroundColor: "#139879",
+					},
+				}}
+				className={classes.loginBtn} disabled={state.disabledBtn}>
                   SIGN IN
                 </Button>
               </Grid>

@@ -6,13 +6,13 @@ import { useImmerReducer } from "use-immer";
 //https://djoser.readthedocs.io/en/latest/settings.html#send-activation-email
 // MUI
 import {
-	Grid,Typography,Button,TextField,Snackbar,Alert
+	Grid,Typography,Button,TextField,Snackbar,Alert,styled
 } from "@mui/material";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { makeStyles } from "@mui/styles";
+//import { makeStyles } from "@mui/styles";
 
-const useStyles = makeStyles({
+const useStyles = styled({
     formContainer: {
 		width: "50%",
 		marginLeft: "auto",
@@ -238,7 +238,16 @@ function UserRegister() {
 	}, [state.openSnack]);
 
     return (
-        <div className={classes.formContainer}>
+        <div 
+		style={{width: "50%",
+		marginLeft: "auto",
+		marginRight: "auto",
+		marginTop: "5rem",
+		border: "5px solid",
+		padding: "2rem",
+        color: "#E9B7C6",
+        boxShadow: '3px 3px 3px #E9B7C6'}}
+		className={classes.formContainer}>
             <form onSubmit={FormSubmit}>
                 <Grid item container justifyContent="center">
 					<Typography variant="h4">Create Account</Typography>
@@ -348,6 +357,13 @@ function UserRegister() {
 					variant="contained" 
 					fullWidth 
 					type="submit" 
+					style={{backgroundColor: "#E9B7C6",
+					color: "white",
+					fontSize: "1.1rem",
+					marginLeft: "1rem",
+					"&:hover": {
+						backgroundColor: "#139879",
+					},}}
 					className={classes.registerBtn}
 					disabled={state.disabledBtn}
 					>

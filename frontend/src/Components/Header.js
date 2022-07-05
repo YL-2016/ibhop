@@ -2,15 +2,15 @@ import React, { useState, useContext, useEffect} from 'react';
 import Axios from "axios";
 import {Link, useNavigate} from "react-router-dom";
 //MUI
-import { Button, Typography, Grid, AppBar, Toolbar, Menu, MenuItem,Snackbar} from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { Button, Typography, Grid, AppBar, Toolbar, Menu, MenuItem,Snackbar,styled} from '@mui/material';
+//import { makeStyles } from '@mui/styles';
 //Component
 import { borderRadius } from '@mui/system';
 //contexts
 import StateContext from '../Contexts/StateContext';
 import DispatchContext from '../Contexts/DispatchContext';
 
-const useStyles = makeStyles({
+const useStyles = styled({
     leftNav:{
         marginRight: "auto"
     },
@@ -113,7 +113,7 @@ useEffect(() => {
   return (
     <AppBar position="static" style={{backgroundColor:'#71AFED'}}>
         <Toolbar>
-            <div className={classes.leftNav}>
+            <div className={classes.leftNav} style={{marginRight: "auto"}}>
                 <Button color="inherit" onClick={()=>navigate('/')}>
                     <Typography variant="h6" component="div">
                     Location-Based Hang Out Planner
@@ -125,7 +125,7 @@ useEffect(() => {
                         Location-Based Travelling-Together Planner
                 </Typography>
             </div> */}
-            <div className={classes.rightNav}>
+            <div className={classes.rightNav} style={{marginLeft: "auto",}}>
                 <Button color="inherit" onClick={()=>navigate('/PlaceList')}>
                     <Typography variant="h7" component="div" style={{marginRight:"1rem"}}>
                         Places
@@ -136,18 +136,41 @@ useEffect(() => {
                         Buddies
                     </Typography>
                 </Button>
-                <Button className={classes.newLocationBtn} onClick={()=>navigate('/AddPlace')}>
+                <Button style={{backgroundColor:'#E9B7C6',
+                                color: 'white',
+                                width: '11rem',
+                                fontSize: '1rem',
+                                "&:hover":{
+                                    backgroundColor: '#139879'
+                                },
+                                marginLeft: "2rem",}}
+                onClick={()=>navigate('/AddPlace')}>
                         Add New Place
                 </Button>
                 {globalState.userIsLogin ? (
-						<Button className={classes.loginBtn}
+						<Button
+                        style={{backgroundColor:'#E9B7C6',
+                        color: 'white',
+                        width: '11rem',
+                        fontSize: '1.1rem',
+                        marginLeft: '1rem',
+                        "&:hover":{
+                            backgroundColor: '#139879'
+                        },}}
                         onClick={handleClick}
                         >
                             {globalState.userUserName}
 						</Button>
 					) : (
 						<Button
-							className={classes.loginBtn}
+                        style={{backgroundColor:'#E9B7C6',
+                        color: 'white',
+                        width: '11rem',
+                        fontSize: '1.1rem',
+                        marginLeft: '1rem',
+                        "&:hover":{
+                            backgroundColor: '#139879'
+                        },}}
 							onClick={() => navigate("/login")}
 						>
 							Login

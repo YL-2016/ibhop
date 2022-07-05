@@ -14,9 +14,10 @@ import {
 	CircularProgress,
 	TextField,
     IconButton,
-    CardActions
+    CardActions,
+    styled
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+//import { makeStyles } from "@mui/styles";
 import { color } from "@mui/system";
 import EmailIcon from '@mui/icons-material/Email';
 //Contexts
@@ -25,7 +26,7 @@ import StateContext from "../Contexts/StateContext";
 import DefaultPic from "../Assets/DefaultPic.jpeg";
 
 
-const useStyles = makeStyles({
+const useStyles = styled({
 
 });
 

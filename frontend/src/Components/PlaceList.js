@@ -7,8 +7,8 @@ import {MapContainer, TileLayer, Marker, Popup, useMap} from 'react-leaflet';
 import {Icon} from 'leaflet';
 //MUI
 import { Button, Typography, Grid, AppBar, Toolbar, Card, CardHeader, CardMedia, 
-  CardContent, CircularProgress, IconButton, CardActions,} from '@mui/material';
-import { makeStyles } from '@mui/styles';
+  CardContent, CircularProgress, IconButton, CardActions,styled} from '@mui/material';
+//import { makeStyles } from '@mui/styles';
 import RoomIcon from "@mui/icons-material/Room";
 
 //Map Marker Icons
@@ -20,7 +20,7 @@ import ConservationParkPng from  '../Assets/icons/ConservationPark.png';
 import TorontoLibImg1 from '../Assets/PlaceImg/TorontoPublicLibrary.png';
 import places from '../Assets/Data/TestingData.js';
 
-const useStyles = makeStyles({
+const useStyles = styled({
   placeCardStyle:{
     position:'relative',
     margin:"8px",
@@ -32,14 +32,6 @@ const useStyles = makeStyles({
     height:"230px",
     width:"450px",
     cursor:"pointer",
-  },
-  adressOverlay:{
-    position:'absolute',
-    backgroundColor:'green',
-    color:'white',
-    top:'500px',
-    left:'20px',
-    padding:'5px',
   },
 })
 
@@ -197,7 +189,11 @@ function PlaceList() {
       <Grid item xs={4}>
         {allPlaces.map((place)=>{
           return (
-            <Card key={place.id} className={classes.placeCardStyle}>
+            <Card key={place.id} 
+            style={{position:'relative',
+            margin:"8px",
+            border: "2px solid white",}}
+            className={classes.placeCardStyle}>
               <CardHeader
                 action={
                  <IconButton aria-label="settings"
@@ -209,6 +205,11 @@ function PlaceList() {
                 //subheader="September 14, 2016"
               />
               <CardMedia className={classes.placeCardMediaStyle}
+              style={{paddingRight:"5px",
+              paddingLeft:"5px",
+              height:"230px",
+              width:"450px",
+              cursor:"pointer",}}
                 component="img"
                 image={place.pic}
                 alt={place.title}

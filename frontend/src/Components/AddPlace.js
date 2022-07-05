@@ -6,9 +6,9 @@ import { useImmerReducer } from "use-immer";
 //https://djoser.readthedocs.io/en/latest/settings.html#send-activation-email
 // MUI
 import {
-	Grid,AppBar,Typography,Button,TextField,Snackbar,Alert,
+	Grid,AppBar,Typography,Button,TextField,Snackbar,Alert,styled
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+//import { makeStyles } from "@mui/styles";
 // React Leaflet
 import {
 	MapContainer,
@@ -16,12 +16,11 @@ import {
 	Marker,
 	Popup,
 	useMap,
-	Polygon,
 } from "react-leaflet";
 // Contexts
 import StateContext from "../Contexts/StateContext";
 
-const useStyles = makeStyles({
+const useStyles = styled({
     formContainer: {
 		width: "80%",
 		marginLeft: "auto",
@@ -466,6 +465,13 @@ function AddPlace() {
                 variant="contained" 
                 fullWidth 
                 type="submit" 
+                style={{backgroundColor: "#E9B7C6",
+                color: "white",
+                fontSize: "1.1rem",
+                marginLeft: "1rem",
+                "&:hover": {
+                    backgroundColor: "#139879",
+                },}}
                 className={classes.registerBtn}
                 disabled={state.disabledBtn}
                 >
@@ -539,7 +545,15 @@ function AddPlace() {
 	}, [state.sendRequest]);
 
     return (
-        <div className={classes.formContainer}>
+        <div className={classes.formContainer}
+        style={{width: "80%",
+		marginLeft: "auto",
+		marginRight: "auto",
+		marginTop: "3rem",
+		border: "5px solid",
+		padding: "2rem",
+        color: "#E9B7C6",
+        boxShadow: '3px 3px 3px #E9B7C6'}}>
             <form onSubmit={FormSubmit}>
             <Alert severity="info">Note:To add a new place successfully, 
             please LOGIN first and make sure you have added your profile info.</Alert>
@@ -742,6 +756,16 @@ function AddPlace() {
                     variant="contained" 
                     conponent="label"
                     fullWidth 
+                    style={{
+                        backgroundColor: "#E9B7C6",
+                        color: "white",
+                        fontSize: "0.8rem",
+                        marginLeft: "1rem",
+                        border: "1px solid white",
+                        "&:hover": {
+                            backgroundColor: "#139879",
+                        },
+                    }}
                     className={classes.addPicBtn}
                     >
                         Upload Pictures (Up to 3)
