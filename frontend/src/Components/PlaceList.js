@@ -96,7 +96,7 @@ function PlaceList() {
     const source = Axios.CancelToken.source();
     async function getAllPlaces(){
       try{
-        const response = await Axios.get('http://localhost:8000/api/places/', 
+        const response = await Axios.get('https://www.lbhop.com/api/places/', 
         { cancelToken: source.token });
         //console.log(response.data);
         setAllPlaces(response.data);

@@ -75,7 +75,7 @@ function BuddyDetail() {
 		async function GetProfileInfo() {
 			try {
 				const response = await Axios.get(
-					`http://localhost:8000/api/profiles/${params.id}/`
+					`https://www.lbhop.com/api/profiles/${params.id}/`
 				);
                 console.log(response.data)
 				dispatch({

@@ -395,7 +395,7 @@ function AddPlace() {
 		async function GetProfileInfo() {
 			try {
 				const response = await Axios.get(
-					`http://localhost:8000/api/profiles/${GlobalState.userId}/`
+					`https://www.lbhop.com/api/profiles/${GlobalState.userId}/`
 				);
                 //console.log(response.data)
 				dispatch({
@@ -531,7 +531,7 @@ function AddPlace() {
                 formData.append("creator", GlobalState.userId);
 				try {
 					const response = await Axios.post(
-						"http://localhost:8000/api/places/create/",
+						"https://www.lbhop.com/api/places/create/",
 						formData
 					);
                     dispatch({ type: "openTheSnack" });

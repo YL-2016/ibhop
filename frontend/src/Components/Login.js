@@ -110,7 +110,7 @@ function Login() {
 			async function SignIn() {
 				try {
 					const response = await Axios.post(
-						"http://localhost:8000/api-auth/token/login/",
+						"https://www.lbhop.com/api-auth/token/login/",
 						{
 							username: state.usernameValue,
 							password: state.passwordValue,
@@ -150,7 +150,7 @@ function Login() {
 			async function getUserData() {
 				try {
 					const response = await Axios.get(
-						"http://localhost:8000/api-auth/users/me/",
+						"https://www.lbhop.com/api-auth/users/me/",
 						{
               headers: { Authorization: "Token ".concat(state.token) },
 						},

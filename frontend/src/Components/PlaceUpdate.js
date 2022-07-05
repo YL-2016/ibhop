@@ -165,7 +165,7 @@ function PlaceUpdate(props) {
                 formData.append("creator", GlobalState.userId);
 				try {
 					const response = await Axios.patch(
-						`http://localhost:8000/api/places/${props.placeData.id}/update/`,
+						`https://www.lbhop.com/api/places/${props.placeData.id}/update/`,
 						formData
 					);
                     dispatch({ type: "openTheSnack" });

@@ -145,7 +145,7 @@ function PlaceDetail() {
 		if (confirmDelete) {
 			try {
 				const response = await Axios.delete(
-					`http://localhost:8000/api/places/${params.id}/delete/`
+					`https://www.lbhop.com/api/places/${params.id}/delete/`
 				);
                 dispatch({ type: "openTheSnack" });
                 dispatch({ type: "disableTheButton" });
@@ -168,7 +168,7 @@ function PlaceDetail() {
 		async function GetPlaceInfo() {
 			try {
 				const response = await Axios.get(
-					`http://localhost:8000/api/places/${params.id}/`
+					`https://www.lbhop.com/api/places/${params.id}/`
 				);
                 console.log(response.data)
 				dispatch({
@@ -187,7 +187,7 @@ function PlaceDetail() {
 			async function GetProfileInfo() {
 				try {
 					const response = await Axios.get(
-						`http://localhost:8000/api/profiles/${state.placeInfo.creator}/`
+						`https://www.lbhop.com/api/profiles/${state.placeInfo.creator}/`
 					);
 
 					dispatch({

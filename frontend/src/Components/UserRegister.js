@@ -187,7 +187,7 @@ function UserRegister() {
 			async function SignUp() {
 				try {
 					const response = await Axios.post(
-						"http://localhost:8000/api-auth/users/",
+						"https://www.lbhop.com/api-auth/users/",
 						{
 							username: state.usernameValue,
 							email: state.emailValue,

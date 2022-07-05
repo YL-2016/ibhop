@@ -61,7 +61,7 @@ function Buddy() {
 		async function GetBuddy() {
 			try {
 				const response = await Axios.get(
-					'http://localhost:8000/api/profiles/'
+					'https://www.lbhop.com/api/profiles/'
 				);
                 console.log(response.data)
 				dispatch({

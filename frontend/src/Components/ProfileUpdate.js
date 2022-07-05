@@ -141,7 +141,7 @@ function ProfileUpdate(props) {
                 //child component of APP conponent
 				try {
 					const response = await Axios.patch(
-						`http://localhost:8000/api/profiles/${GlobalState.userId}/update/`,
+						`https://www.lbhop.com/api/profiles/${GlobalState.userId}/update/`,
 						formData
 					);
                     //REFRESH AFTER SUCCESSFUL

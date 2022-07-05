@@ -90,7 +90,7 @@ function Header() {
     if (confirmLogout) {
         try {
             const response = await Axios.post(
-                "http://localhost:8000/api-auth/token/logout/",
+                "https://www.lbhop.com/api-auth/token/logout/",
                 globalState.userToken,
                 { headers: { Authorization: "Token ".concat(globalState.userToken) } }
             );
