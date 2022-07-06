@@ -151,8 +151,8 @@ function BuddyDetail() {
                                         component="img"
                                         height="200"
                                         image={
-                                            `https://www.lbhop.com/${place.pic1}`
-                                            ? `https://www.lbhop.com/${place.pic}` 
+                                            place.pic1
+                                            ? place.pic2 
                                             : DefaultPic}
                                         alt=" Place Picture"
                                         onClick={()=>navigate(`/PlaceList/${place.id}`)}
