@@ -17,6 +17,7 @@ import {
 	Popup,
 	useMap,
 } from "react-leaflet";
+import { geosearch } from 'esri-leaflet-geocoder'
 // Contexts
 import StateContext from "../Contexts/StateContext";
 
@@ -344,7 +345,6 @@ function AddPlace() {
 		}),
 		[]
 	);
-
     //use effect to change the map view depending on the chosen area
     useEffect(()=>{
         if(state.areaValue === 'Within the Canada'){
@@ -723,6 +723,7 @@ function AddPlace() {
                             <TileLayer
 								attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 								url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                
 							/>
                             <TheMapConponent/>
                             <Marker

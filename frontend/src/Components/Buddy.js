@@ -126,7 +126,9 @@ function Buddy() {
 									alt="Profile Picture"
 								/>
 								<CardContent>
-									<Typography gutterBottom variant="h5" component="div">
+									<Typography gutterBottom variant="h5" component="div"
+									onClick={()=>navigate(`/Buddy/${buddy.creator}`)}
+									style={{cursor:"pointer"}}>
 										{buddy.creator_name}
 									</Typography>
 									<Typography variant="body2" color="text.secondary">

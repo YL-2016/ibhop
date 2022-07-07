@@ -131,7 +131,7 @@ function PlaceList() {
       <Grid item xs={8} style={{marginTop:"10px"}}>
         <AppBar position='sticky'>
           <div style={{height:"100vh"}}>
-            <MapContainer center={[43.6532, -79.3832]} zoom={10} scrollWheelZoom={true}>
+            <MapContainer center={[43.6532, -79.3832]} zoom={9} scrollWheelZoom={true}>
               <TileLayer
 								attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 								url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
